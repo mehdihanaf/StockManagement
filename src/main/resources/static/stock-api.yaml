@@ -22,7 +22,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Category'
+                  $ref: '#/components/schemas/CategoryDTO'
 
     post:
       tags:
@@ -33,7 +33,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Category'
+              $ref: '#/components/schemas/CategoryDTO'
         required: true
       responses:
         'default':
@@ -41,7 +41,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category'
+                $ref: '#/components/schemas/CategoryDTO'
 
   /categories/{id}:
     get:
@@ -61,7 +61,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category'
+                $ref: '#/components/schemas/CategoryDTO'
 
     put:
       tags:
@@ -79,7 +79,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Category'
+              $ref: '#/components/schemas/CategoryDTO'
         required: true
       responses:
         'default':
@@ -87,7 +87,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category'
+                $ref: '#/components/schemas/CategoryDTO'
 
     delete:
       tags:
@@ -117,7 +117,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Product'
+                  $ref: '#/components/schemas/ProductDTO'
 
     post:
       tags:
@@ -128,7 +128,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductDTO'
         required: true
       responses:
         'default':
@@ -136,7 +136,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/ProductDTO'
 
   /products/{id}:
     get:
@@ -156,7 +156,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/ProductDTO'
 
     put:
       tags:
@@ -174,7 +174,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductDTO'
         required: true
       responses:
         'default':
@@ -182,7 +182,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/ProductDTO'
 
     delete:
       tags:
@@ -212,7 +212,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Sale'
+                  $ref: '#/components/schemas/SaleDTO'
 
     post:
       tags:
@@ -223,7 +223,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Sale'
+              $ref: '#/components/schemas/SaleDTO'
         required: true
       responses:
         'default':
@@ -231,7 +231,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Sale'
+                $ref: '#/components/schemas/SaleDTO'
   /sales/{id}:
     get:
       tags:
@@ -250,7 +250,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Sale'
+                $ref: '#/components/schemas/SaleDTO'
         '400':
           description: Invalid Sale ID
     put:
@@ -269,7 +269,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Sale'
+              $ref: '#/components/schemas/SaleDTO'
         required: true
       responses:
         'default':
@@ -277,7 +277,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Sale'
+                $ref: '#/components/schemas/SaleDTO'
     delete:
       tags:
         - Sale
@@ -304,14 +304,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/usern'
+              $ref: '#/components/schemas/usernDTO'
       responses:
         default:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/usern'
+                $ref: '#/components/schemas/usernDTO'
   /usern/login:
       get:
         tags:
@@ -383,7 +383,7 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/usern'
+                  $ref: '#/components/schemas/usernDTO'
           '400':
             description: Invalid usernname supplied
           '404':
@@ -406,7 +406,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/usern'
+                $ref: '#/components/schemas/usernDTO'
         responses:
           default:
             description: successful operation
@@ -432,7 +432,7 @@ paths:
             description: usern not found
 components:
   schemas:
-    Category:
+    CategoryDTO:
       type: object
       properties:
         id:
@@ -442,7 +442,7 @@ components:
           type: string
       required:
         - name
-    Product:
+    ProductDTO:
       type: object
       properties:
         id:
@@ -467,7 +467,7 @@ components:
           type: string
           format: date
         category:
-          $ref: '#/components/schemas/Category'
+          $ref: '#/components/schemas/CategoryDTO'
       required:
         - productName
         - productCode
@@ -476,7 +476,7 @@ components:
         - sellPrice
         - buyDate
         - category
-    Sale:
+    SaleDTO:
       type: object
       properties:
         id:
@@ -494,14 +494,14 @@ components:
           type: number
           format: double
         product:
-          $ref: '#/components/schemas/Product'
+          $ref: '#/components/schemas/ProductDTO'
       required:
         - description
         - saleDate
         - saleQuantity
         - discount
         - product
-    usern:
+    usernDTO:
       type: object
       properties:
         id:
