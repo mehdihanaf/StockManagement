@@ -126,6 +126,7 @@
 								<supportingFiles>ApiUtil.java</supportingFiles>
 							</environmentVariables>
 							<configOptions>
+								<useJakartaEe>true</useJakartaEe>
 								<interfaceOnly>true</interfaceOnly>
 								<useBeanValidation>true</useBeanValidation>
 								<performBeanValidation>true</performBeanValidation>
