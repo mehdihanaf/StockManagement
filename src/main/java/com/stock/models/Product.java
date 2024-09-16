@@ -1,4 +1,4 @@
-package com.StockManagement.models;
+package com.stock.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.StockManagement.repository;
+package com.stock.repository;
 
 import com.StockManagement.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;

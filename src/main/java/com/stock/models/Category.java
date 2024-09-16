@@ -1,4 +1,4 @@
-package com.StockManagement.models;
+package com.stock.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
