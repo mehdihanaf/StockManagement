@@ -7,4 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CategoryController implements CategoriesApi {
 
+
+
+    int a;
+
 }
