@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com</groupId>
-	<artifactId>StockManagement</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>StockManagement</name>
-	<description>Demo project for Spring Boot</description>
+	<artifactId>stock-management</artifactId>
+	<version>1.0.1-SNAPSHOT</version>
+	<name>stock-management</name>
+	<description>Stock MAnagement API</description>
 	<url/>
 	<licenses>
 		<license/>
