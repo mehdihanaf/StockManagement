@@ -1,7 +1,9 @@
 package com.stock.repository;
 
-import com.stock.models.Sale;
+import com.stock.models.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ICategoryRepository extends JpaRepository<Sale,Long> {
+@Repository
+public interface ICategoryRepository extends JpaRepository<Category,Long> {
 }
