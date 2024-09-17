@@ -2,6 +2,7 @@ package com.stock.security;
 
 import com.stock.utils.DateUtils;
 import com.stock.utils.JwtTokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -13,12 +14,13 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
 
+@Slf4j
 @Service
 public class AuthService {
 
     private static final String AUTH_TOKEN_HEADER_NAME = "api-key";
 
-    private  AuthProperties authProperties;
+    private final AuthProperties authProperties;
 
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -65,7 +67,7 @@ public class AuthService {
         try {
             return DateUtils.diff(new Date(), this.jwtTokenUtil.extractExpiration(token));
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error("Error During Date Parsing");
         }
         return -1;
     }
