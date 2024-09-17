@@ -292,7 +292,7 @@ paths:
       responses:
         'default':
           description: Sale deleted
-  /usern:
+  /users:
     post:
       tags:
         - usern
@@ -304,34 +304,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/usernDTO'
+              $ref: '#/components/schemas/UserDTO'
       responses:
         default:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/usernDTO'
-  /usern/login:
-      get:
+                $ref: '#/components/schemas/UserDTO'
+  /user/login:
+      post:
         tags:
-          - usern
+          - Authentication
         summary: Logs usern into the system
         description: ''
-        operationId: loginusern
-        parameters:
-          - name: usernname
-            in: query
-            description: The usern name for login
-            required: false
-            schema:
-              type: string
-          - name: password
-            in: query
-            description: The password for login in clear text
-            required: false
-            schema:
-              type: string
+        operationId: login
+        requestBody:
+          description: User Login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginPayload'
         responses:
           'default':
             description: successful operation
@@ -349,87 +342,21 @@ paths:
             content:
               application/json:
                 schema:
-                  type: string
+                  $ref: '#/components/schemas/Token'
           '400':
             description: Invalid usernname/password supplied
-  /usern/logout:
+  /user/logout:
       get:
         tags:
-          - usern
-        summary: Logs out current logged in usern session
+          - Authentication
+        summary: Logs out current logged in user session
         description: ''
-        operationId: logoutusern
+        operationId: logout
         parameters: [ ]
         responses:
           default:
             description: successful operation
-  /usern/{usernname}:
-      get:
-        tags:
-          - usern
-        summary: Get usern by usern name
-        description: ''
-        operationId: getusernByName
-        parameters:
-          - name: usernname
-            in: path
-            description: 'The name that needs to be fetched. Use usern1 for testing. '
-            required: true
-            schema:
-              type: string
-        responses:
-          'default':
-            description: successful operation
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/usernDTO'
-          '400':
-            description: Invalid usernname supplied
-          '404':
-            description: usern not found
-      put:
-        tags:
-          - usern
-        summary: Update usern
-        description: This can only be done by the logged in usern.
-        operationId: updateusern
-        parameters:
-          - name: usernname
-            in: path
-            description: name that need to be deleted
-            required: true
-            schema:
-              type: string
-        requestBody:
-          description: Update an existent usern in the store
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/usernDTO'
-        responses:
-          default:
-            description: successful operation
-      delete:
-        tags:
-          - usern
-        summary: Delete usern
-        description: This can only be done by the logged in usern.
-        operationId: deleteusern
-        parameters:
-          - name: usernname
-            in: path
-            description: The name that needs to be deleted
-            required: true
-            schema:
-              type: string
-        responses:
-          default:
-            description: usernname deleted
-          '400':
-            description: Invalid usernname supplied
-          '404':
-            description: usern not found
+
 components:
   schemas:
     CategoryDTO:
@@ -501,13 +428,13 @@ components:
         - saleQuantity
         - discount
         - product
-    usernDTO:
+    UserDTO:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        usernname:
+        username:
           type: string
         firstName:
           type: string
@@ -518,13 +445,73 @@ components:
           type: string
         password:
           type: string
+        logged:
+          type: boolean
+          example: true
         phone:
           type: string
         usernStatus:
           type: integer
           description: usern Status
           format: int32
+        deleted:
+          type: boolean
+          example: true
+        active:
+          type: boolean
+          example: true
+        roles:
+          type: string
+          example: 'ADMIN|STAFF'
       required:
         - usernname
         - password
         - status
+
+    LoginPayload:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    Token:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+          example: 1221
+        token:
+          type: string
+          example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0IiwiYXVkIjpbImFkbWluIl0sImlzcyI6Im1hc29uLm1ldGFtdWcubmV0IiwiZXhwIjoxNTc0NTEyNzY1LCJpYXQiOjE1NjY3MzY3NjUsImp0aSI6ImY3YmZlMzNmLTdiZjctNGViNC04ZTU5LTk5MTc5OWI1ZWI4YSJ9.EVcCaSqrSNVs3cWdLt-qkoqUk7rPHEOsDHS8yejwxMw"
+        expiration:
+          type: integer
+          format: int64
+          example: 1235216897543
+        roles:
+          type: string
+          example: "ADMIN;SUPERVISOR;STAFF"
+        firstname:
+          type: string
+          example: ismail
+        lastname:
+          type: string
+          example: rzouki
+        username:
+          type: string
+          example: ir91995
+
+    CommonResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Exception Details from the API
+        details:
+          type: string
+          example: "Common Response returned from the server"

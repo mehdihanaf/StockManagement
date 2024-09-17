@@ -1,6 +1,7 @@
 package com.stock.security;
 
-import lombok.RequiredArgsConstructor;
+import com.stock.utils.DateUtils;
+import com.stock.utils.JwtTokenUtil;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -8,15 +9,18 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Date;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private static final String AUTH_TOKEN_HEADER_NAME = "api-key";
-    private final AuthProperties authProperties;
 
+    private  AuthProperties authProperties;
+
+    private JwtTokenUtil jwtTokenUtil;
 
     private static final String[] AUTH_WHITELIST = {
             // -- Swagger UI v2
@@ -34,6 +38,11 @@ public class AuthService {
             "/actuator/**"
     };
 
+    public AuthService(AuthProperties authProperties, JwtTokenUtil jwtTokenUtil) {
+        this.authProperties = authProperties;
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
+
     public Authentication getAuthentication(HttpServletRequest request) {
         var path = request.getRequestURL().toString();
         if(!stringContainsItemFromList(path, AUTH_WHITELIST)) {
@@ -50,6 +59,15 @@ public class AuthService {
 
     public static boolean stringContainsItemFromList(String path, String[] whitelist) {
         return Arrays.stream(whitelist).anyMatch(path::contains);
+    }
+
+    public long getExipartion(String token) {
+        try {
+            return DateUtils.diff(new Date(), this.jwtTokenUtil.extractExpiration(token));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
 
