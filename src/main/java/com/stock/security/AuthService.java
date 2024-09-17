@@ -20,7 +20,7 @@ public class AuthService {
 
     private  AuthProperties authProperties;
 
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
     private static final String[] AUTH_WHITELIST = {
             // -- Swagger UI v2
@@ -69,7 +69,5 @@ public class AuthService {
         }
         return -1;
     }
-
-
 
 }

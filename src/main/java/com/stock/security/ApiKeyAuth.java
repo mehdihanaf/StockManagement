@@ -3,12 +3,14 @@ package com.stock.security;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Objects;
 
 public class ApiKeyAuth extends AbstractAuthenticationToken {
 
-	private static final long serialVersionUID = 1L;
+	@Serial
+    private static final long serialVersionUID = 1L;
 	
 	private final String apiKey;
 

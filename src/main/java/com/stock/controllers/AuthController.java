@@ -8,9 +8,9 @@ import com.stock.model.LoginPayload;
 import com.stock.model.Token;
 import com.stock.model.UserDTO;
 import com.stock.security.AuthService;
-import com.stock.utils.JwtTokenUtil;
 import com.stock.services.JwtUserDetailsService;
 import com.stock.services.impl.UserServiceImpl;
+import com.stock.utils.JwtTokenUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -40,37 +39,32 @@ public class AuthController implements UserApi {
 
     private final AuthService authService;
 
-    private void authenticate(String username, String password) throws Exception {
+    private void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 
     @Override
     public ResponseEntity<Token> login(@Valid @RequestBody LoginPayload loginPayload) {
-
         try {
             authenticate(loginPayload.getUsername(), loginPayload.getPassword());
         } catch (BadCredentialsException e) {
-            throw new UserAuthenticationException(String.format("Bad Credentials Provided", ""));
+            throw new UserAuthenticationException("Bad Credentials Provided");
         } catch (LockedException e) {
             throw new UserAuthenticationException(
-                    String.format("User is currently Disbaled! Contact your Administrator.", loginPayload.getUsername()));
+                    String.format("User [%s] is currently Disabled! Contact your Administrator.", loginPayload.getUsername()));
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginPayload.getUsername());
-
-        final String token = jwtTokenUtil.generateToken(userDetails);
-
+        var userDetails = userDetailsService.loadUserByUsername(loginPayload.getUsername());
+        var token = jwtTokenUtil.generateToken(userDetails);
         userServiceImpl.logged(loginPayload.getUsername(), token);
-        UserDTO currentUser = userServiceImpl.getByUsername(loginPayload.getUsername());
+        var currentUser = userServiceImpl.getByUsername(loginPayload.getUsername());
         Token response = new Token().userId(currentUser.getId()).token(token).expiration(authService.getExipartion(token))
-                .roles(userServiceImpl.getUserRolesByEmail(loginPayload.getUsername()))
+                .roles(userServiceImpl.getUserRolesByUsername(loginPayload.getUsername()))
                 .firstname(currentUser.getFirstName()).lastname(currentUser.getLastName())
                 .username(currentUser.getUsername());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
     @ExceptionHandler(value = UserAuthenticationException.class)

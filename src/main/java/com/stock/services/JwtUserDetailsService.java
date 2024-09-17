@@ -1,9 +1,8 @@
 package com.stock.services;
 
-import com.stock.model.UserDTO;
 import com.stock.security.UserPrincipal;
 import com.stock.services.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,13 +11,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
+@RequiredArgsConstructor
 public class JwtUserDetailsService implements UserDetailsService {
 
-	private UserServiceImpl userService;
+	private final UserServiceImpl userService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserDTO userDto = userService.getByUsername(username);
+		var userDto = userService.getByUsername(username);
 		UserPrincipal userPrincipal = null;
 		if (userDto != null && (userDto.getDeleted() == null
 				|| (userDto.getDeleted() != null && !userDto.getDeleted()))) {
@@ -31,11 +31,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException("User not found with username: " + username);
 		}
 		return userPrincipal;
-	}
-
-	@Autowired
-	public void setUserService(UserServiceImpl userService) {
-		this.userService = userService;
 	}
 
 }

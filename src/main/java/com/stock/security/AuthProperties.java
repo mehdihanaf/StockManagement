@@ -11,7 +11,4 @@ public class AuthProperties {
     @Value("${api.key}")
     private String apiKey;
 
-    public String getApiKey() {
-        return apiKey;
-    }
 }

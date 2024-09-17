@@ -32,6 +32,7 @@ public class Sale {
     @OneToOne
     private Product product;
 
+
     }
 
 

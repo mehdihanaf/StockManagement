@@ -1,28 +1,20 @@
 package com.stock.exceptions;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Getter
 public class UserAuthenticationException extends RuntimeException {
-	private static Logger logger = LogManager.getLogger(UserAuthenticationException.class.toString());
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -7107879666540063217L;
 
-	private String message;
-
-	public UserAuthenticationException() {
-		super();
-	}
+	private final String message;
 
 	public UserAuthenticationException(String message) {
 		super();
 		this.message = message;
-		logger.error(this.message);
+		log.error(this.message);
 	}
 
-	public String getMessage() {
-		return this.message;
-	}
 }
