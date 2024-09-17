@@ -3,10 +3,9 @@ package com.stock.services;
 import com.stock.exceptions.TMNotFoundException;
 import com.stock.model.CategoryDTO;
 import com.stock.models.Category;
+import com.stock.pages.CategoryPage;
 import com.stock.repository.ICategoryRepository;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,9 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
-public class CategoryServiceImp implements ICategoryService{
-
+public class CategoryServiceImpl implements ICategoryService {
 
     private static final int MAX_PER_PAGE = 5;
 
@@ -25,23 +22,24 @@ public class CategoryServiceImp implements ICategoryService{
 
     private final ModelMapper modelMapper;
 
+    public CategoryServiceImpl(ICategoryRepository categoryRepository, ModelMapper modelMapper) {
+        this.categoryRepository = categoryRepository;
+        this.modelMapper = modelMapper;
+    }
+
 
     @Override
     public CategoryDTO getById(Long id) {
-
         return categoryRepository.findById(id)
                 .map( category -> modelMapper.map(category, CategoryDTO.class))
                 .orElseThrow(() -> new TMNotFoundException("category not found"));
-
     }
 
     @Override
     public List<CategoryDTO> getAll() {
-
         return categoryRepository.findAll().stream()
                                   .map( category -> modelMapper.map(category, CategoryDTO.class))
                                   .collect(Collectors.toList());
-
     }
 
     @Override
@@ -68,7 +66,7 @@ public class CategoryServiceImp implements ICategoryService{
 
         Category category = modelMapper.map(categoryDTO,Category.class);
 
-        category.setId(id);
+        //category.setId(id);
 
         Category savedCategory = categoryRepository.save(category);
 
@@ -85,17 +83,9 @@ public class CategoryServiceImp implements ICategoryService{
     }
 
     @Override
-    public List<CategoryDTO> getByPage(int page) {
-
-        Page<Category> pageCategories = this.categoryRepository.findAll(PageRequest.of(page, MAX_PER_PAGE));
-
-        return pageCategories.getContent().stream()
-                                          .map(category -> modelMapper.map(category,CategoryDTO.class))
-                                          .collect(Collectors.toList());
-
+    public CategoryPage getByPage(int page) {
+        var categoryPage =  categoryRepository.findAll(PageRequest.of(page, MAX_PER_PAGE));
+        return new CategoryPage(categoryPage.map(category -> modelMapper.map(category, CategoryDTO.class)));
     }
-
-
-
 
 }

@@ -1,6 +1,8 @@
 package com.stock.services;
 
 import com.stock.model.CategoryDTO;
+import com.stock.pages.CategoryPage;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,6 +20,6 @@ public interface ICategoryService {
 
     void delete(Long l);
 
-    List<CategoryDTO> getByPage(int page);
+    CategoryPage getByPage(int page);
 
 }

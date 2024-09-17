@@ -1,41 +1,47 @@
 package com.stock.controllers;
 
 import com.stock.StockManagementConstants;
-import com.stock.api.controller.CategoriesApi;
+import com.stock.api.controller.CategoryApi;
 import com.stock.model.CategoryDTO;
-import com.stock.services.ICategoryService;
-import lombok.RequiredArgsConstructor;
+import com.stock.pages.CategoryPage;
+import com.stock.services.CategoryServiceImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping(StockManagementConstants.API_VERSION)
-public class CategoryController implements CategoriesApi {
+public class CategoryController implements CategoryApi {
 
+    private final CategoryServiceImpl categoryService;
 
-    private final ICategoryService categoryServiceI;
+    public CategoryController(CategoryServiceImpl categoryService) {
+        this.categoryService = categoryService;
+    }
 
+    @Override
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
 
-
-
-
-    @GetMapping("/categories")
-    public ResponseEntity<List<CategoryDTO>> allCategories() {
-
-        List<CategoryDTO> categories = categoryServiceI.getAll();
+        List<CategoryDTO> categories = categoryService.getAll();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categories);
     }
 
+    @Override
+    public ResponseEntity<CategoryPage> categoriesPerPage(@RequestParam Integer page) {
+        return ResponseEntity.ok(categoryService.getByPage(--page));
+    }
+/*
     @GetMapping("/category/{id}")
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable("id") Long id) {
 
-        CategoryDTO categorydto = categoryServiceI.getById(id);
+        CategoryDTO categorydto = categoryService.getById(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categorydto);
@@ -52,7 +58,7 @@ public class CategoryController implements CategoriesApi {
                 .status(HttpStatus.OK)
                 .body(categoriesByPage);
     }
-*/
+
 
     @PostMapping("/category")
     public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO CategoryDTO) {
@@ -81,6 +87,6 @@ public class CategoryController implements CategoriesApi {
                 .status(HttpStatus.CREATED)
                 .body("category is deleted");
     }
-
+*/
 
 }
