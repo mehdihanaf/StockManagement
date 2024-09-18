@@ -5,15 +5,12 @@ import com.stock.model.CategoryDTO;
 import com.stock.models.Category;
 import com.stock.pages.CategoryPage;
 import com.stock.repository.ICategoryRepository;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j

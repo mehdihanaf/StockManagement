@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Date;
+
+import java.time.LocalDate;
+
 
 @Entity
 @Data
@@ -25,11 +27,11 @@ public class Product {
 
     private Long quantity;
 
-    private Double unitPrice;
+    private Double unitBuyPrice;
 
-    private Double sellPrice;
+    private Double unitSellPrice;
 
-    private Date buyDate;
+    private LocalDate buyDate;
 
     @ManyToOne
     private Category category;
