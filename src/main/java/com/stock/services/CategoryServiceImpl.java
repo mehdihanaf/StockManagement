@@ -5,6 +5,7 @@ import com.stock.model.CategoryDTO;
 import com.stock.models.Category;
 import com.stock.pages.CategoryPage;
 import com.stock.repository.ICategoryRepository;
+import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,17 +30,17 @@ public class CategoryServiceImpl implements ICategoryService {
 
 
     @Override
-    public CategoryDTO getById(Long id) {
+    public CategoryDTO getById(Integer id) {
         return categoryRepository.findById(id)
-                .map( category -> modelMapper.map(category, CategoryDTO.class))
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
                 .orElseThrow(() -> new TMNotFoundException("category not found"));
     }
 
     @Override
     public List<CategoryDTO> getAll() {
         return categoryRepository.findAll().stream()
-                                  .map( category -> modelMapper.map(category, CategoryDTO.class))
-                                  .collect(Collectors.toList());
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -58,33 +59,42 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public CategoryDTO edit(CategoryDTO categoryDTO, Long id) {
+    public CategoryDTO edit(Integer id, CategoryDTO categoryDTO) {
 
-         getById(id);
+        getById(id);
+
 
         //TODO validations..
 
-        Category category = modelMapper.map(categoryDTO,Category.class);
 
-        //category.setId(id);
+        Category category = modelMapper.map(categoryDTO, Category.class);
+
+        category.setId(id);
 
         Category savedCategory = categoryRepository.save(category);
 
-        return modelMapper.map(savedCategory,CategoryDTO.class);
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete( Integer id) {
 
         //TODO validations...
-
         categoryRepository.deleteById(id);
+
+    }
+
+    public List<CategoryDTO> search(String name) {
+
+        return categoryRepository.findByName(name).stream()
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .collect(Collectors.toList());
 
     }
 
     @Override
     public CategoryPage getByPage(int page) {
-        var categoryPage =  categoryRepository.findAll(PageRequest.of(page, MAX_PER_PAGE));
+        var categoryPage = categoryRepository.findAll(PageRequest.of(page, MAX_PER_PAGE));
         return new CategoryPage(categoryPage.map(category -> modelMapper.map(category, CategoryDTO.class)));
     }
 

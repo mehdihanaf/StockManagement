@@ -10,16 +10,18 @@ import java.util.List;
 public interface ICategoryService {
 
 
-    CategoryDTO getById(Long id);
+    CategoryDTO getById(Integer id);
 
     List<CategoryDTO> getAll();
 
     CategoryDTO add(CategoryDTO t);
 
-    CategoryDTO edit(CategoryDTO t, Long id);
+    CategoryDTO edit( Integer id, CategoryDTO t);
 
-    void delete(Long l);
+    void delete(Integer id);
 
     CategoryPage getByPage(int page);
+
+    List<CategoryDTO> search(String name);
 
 }

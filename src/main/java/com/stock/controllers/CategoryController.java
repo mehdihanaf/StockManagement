@@ -4,13 +4,10 @@ import com.stock.StockManagementConstants;
 import com.stock.api.controller.CategoryApi;
 import com.stock.model.CategoryDTO;
 import com.stock.pages.CategoryPage;
-import com.stock.services.CategoryServiceImpl;
-import org.springframework.data.domain.Page;
+import com.stock.services.ICategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,9 +15,9 @@ import java.util.List;
 @RequestMapping(StockManagementConstants.API_VERSION)
 public class CategoryController implements CategoryApi {
 
-    private final CategoryServiceImpl categoryService;
+    private final ICategoryService categoryService;
 
-    public CategoryController(CategoryServiceImpl categoryService) {
+    public CategoryController(ICategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
@@ -37,14 +34,52 @@ public class CategoryController implements CategoryApi {
     public ResponseEntity<CategoryPage> categoriesPerPage(@RequestParam Integer page) {
         return ResponseEntity.ok(categoryService.getByPage(--page));
     }
-/*
-    @GetMapping("/category/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable("id") Long id) {
+
+    @Override
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable("id") Integer id) {
 
         CategoryDTO categorydto = categoryService.getById(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categorydto);
+    }
+
+    @Override
+    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO CategoryDTO) {
+
+        CategoryDTO categoryDTO1 = categoryService.add(CategoryDTO);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(categoryDTO1);
+    }
+
+    @Override
+    public ResponseEntity<CategoryDTO> editCategory(@PathVariable("id") Integer id, @RequestBody CategoryDTO CategoryDTO) {
+
+        CategoryDTO CategoryDTO1 = categoryService.edit(id, CategoryDTO);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(CategoryDTO1);
+    }
+
+    @Override
+    public ResponseEntity<String> deleteCategory(@PathVariable("id") Integer id) {
+
+        //todo validation
+
+        categoryService.delete(id);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("category is deleted");
+    }
+
+    @Override
+    public ResponseEntity<List<CategoryDTO>> getCategoriesByName(@RequestParam String name) {
+
+        List<CategoryDTO> categories = categoryService.search(name);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categories);
     }
 
     /*
@@ -60,33 +95,7 @@ public class CategoryController implements CategoryApi {
     }
 
 
-    @PostMapping("/category")
-    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO CategoryDTO) {
 
-        CategoryDTO categoryDTO1 = categoryServiceI.add(CategoryDTO);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(categoryDTO1);
-    }
-
-    @PutMapping("/category/{id}")
-    public ResponseEntity<CategoryDTO> editCategory(@RequestBody CategoryDTO CategoryDTO, @PathVariable("id") Long id) {
-
-        CategoryDTO CategoryDTO1 = categoryServiceI.edit(CategoryDTO, id);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(CategoryDTO1);
-    }
-
-    @DeleteMapping("/category/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable("id") Long id) {
-
-        categoryServiceI.delete(id);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("category is deleted");
-    }
 */
 
 }

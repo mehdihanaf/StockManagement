@@ -47,7 +47,116 @@ paths:
             application/json:
               schema:
                 type: CategoryPageDTO
-
+  /category/{id}:
+    get:
+      tags:
+        - Category
+      operationId: getCategoryById
+      summary: Get Category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        'default':
+          description: Category details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDTO'
+  /category/add:
+    post:
+      tags:
+        - Category
+      operationId: addCategory
+      summary: Create a new Category
+      requestBody:
+        description: Category to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryDTO'
+      responses:
+        'default':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDTO'
+  /category/edit/{id}:
+    put:
+      tags:
+        - Category
+      operationId: editCategory
+      summary: Update a category
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: ID of the Category
+      requestBody:
+        description: Updated category data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryDTO'
+      responses:
+        'default':
+          description: Category updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDTO'
+  /category/delete/{id}:
+    delete:
+      tags:
+        - Category
+      operationId: deleteCategory
+      summary: Delete a Category
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: ID of the Category
+      responses:
+        '200':
+          description: Category deleted
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Category deleted successfully."
+        '400':
+          description: Invalid Category value
+  /category/search:
+    get:
+      tags:
+        - Category
+      operationId: getCategoriesByName
+      summary: Get categories by name
+      parameters:
+        - in: query
+          name: name
+          description: name of category
+          required: true
+          schema:
+            type: string
+            example: 'phones'
+      responses:
+        'default':
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDTO'
   /products:
     get:
       tags:
