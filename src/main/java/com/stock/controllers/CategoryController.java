@@ -66,8 +66,8 @@ public class CategoryController implements CategoryApi {
     public ResponseEntity<String> deleteCategory(@PathVariable("id") Integer id) {
 
         //todo validation
-
         categoryService.delete(id);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body("category is deleted");
