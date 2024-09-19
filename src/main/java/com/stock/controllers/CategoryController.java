@@ -31,11 +31,11 @@ public class CategoryController implements CategoryApi {
     }
 
     @Override
-    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO CategoryDTO) {
-        var categoryDTO = categoryService.add(CategoryDTO);
+    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO) {
+        var categoryResult = categoryService.add(categoryDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(categoryDTO);
+                .body(categoryResult);
     }
 
     @Override
