@@ -9,7 +9,8 @@ servers:
     description: Local server
 
 paths:
-  /categories:
+
+  /category/all:
     get:
       tags:
         - Category
@@ -27,34 +28,36 @@ paths:
     post:
       tags:
         - Category
-      summary: Create a new category
-      requestBody:
-        description: Category to create
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CategoryDTO'
-        required: true
+      operationId: CategoriesPerPage
+      summary: Get Categories by page number
+      #x-spring-paginated: true
+      parameters:
+        - in: query
+          name: page
+          description: number of page
+          required: true
+          schema:
+            type: integer
+            example: '1'
       responses:
         'default':
-          description: Category created
+          description: A list of categories
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CategoryDTO'
-
-  /categories/{id}:
+                type: CategoryPageDTO
+  /category/{id}:
     get:
       tags:
         - Category
-      summary: Get a category by ID
+      operationId: getCategoryById
+      summary: Get Category by ID
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID of the category
       responses:
         'default':
           description: Category details
@@ -62,25 +65,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
-
+  /category/add:
+    post:
+      tags:
+        - Category
+      operationId: addCategory
+      summary: Create a new Category
+      requestBody:
+        description: Category to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryDTO'
+      responses:
+        'default':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDTO'
+  /category/edit/{id}:
     put:
       tags:
         - Category
+      operationId: editCategory
       summary: Update a category
       parameters:
         - in: path
-          name: id
           required: true
+          name: id
           schema:
             type: integer
-          description: ID of the category
+          description: ID of the Category
       requestBody:
         description: Updated category data
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CategoryDTO'
-        required: true
       responses:
         'default':
           description: Category updated
@@ -88,68 +110,79 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
-
+  /category/delete/{id}:
     delete:
       tags:
         - Category
-      summary: Delete a category
+      operationId: deleteCategory
+      summary: Delete a Category
       parameters:
         - in: path
-          name: id
           required: true
+          name: id
           schema:
             type: integer
-          description: ID of the category
+          description: ID of the Category
+      responses:
+        '200':
+          description: Category deleted
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Category deleted successfully."
+        '400':
+          description: Invalid Category value
+  /category/search:
+    get:
+      tags:
+        - Category
+      operationId: getCategoriesByName
+      summary: Get categories by name
+      parameters:
+        - in: query
+          name: name
+          description: name of category
+          required: true
+          schema:
+            type: string
+            example: 'phones'
       responses:
         'default':
-          description: Category deleted
-
-  /products:
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDTO'
+  /product/all:
     get:
       tags:
         - Product
-      summary: Get all products
+      operationId: getAllProducts
+      summary: Get all Products
       responses:
         'default':
-          description: A list of products
+          description: A list of Products
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
-
-    post:
-      tags:
-        - Product
-      summary: Create a new product
-      requestBody:
-        description: Product to create
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProductDTO'
-        required: true
-      responses:
-        'default':
-          description: Product created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductDTO'
-
-  /products/{id}:
+  /product/{id}:
     get:
       tags:
         - Product
-      summary: Get a product by ID
+      operationId: getProductById
+      summary: Get Product by ID
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID of the product
       responses:
         'default':
           description: Product details
@@ -157,25 +190,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
-
-    put:
+  /product:
+    get:
       tags:
         - Product
-      summary: Update a product
+      operationId: ProductsPerPage
+      summary: Get Product by page number
+      #x-spring-paginated: true
       parameters:
-        - in: path
-          name: id
+        - in: query
+          name: page
+          description: number of page
           required: true
           schema:
             type: integer
-          description: ID of the product
+            example: '1'
+      responses:
+        'default':
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: CategoryPageDTO
+  /product/add:
+    post:
+      tags:
+        - Product
+      operationId: addProduct
+      summary: Create a new Product
       requestBody:
-        description: Updated product data
+        description: Product to create
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductDTO'
-        required: true
+      responses:
+        'default':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDTO'
+  /product/edit/{id}:
+    put:
+      tags:
+        - Product
+      operationId: editProduct
+      summary: Update a Product
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: ID of the Product
+      requestBody:
+        description: Updated Product data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDTO'
       responses:
         'default':
           description: Product updated
@@ -183,22 +257,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
-
+  /product/delete/{id}:
     delete:
       tags:
         - Product
-      summary: Delete a product
+      operationId: deleteProduct
+      summary: Delete a Product
       parameters:
         - in: path
-          name: id
           required: true
+          name: id
           schema:
             type: integer
-          description: ID of the product
+          description: ID of the Product
+      responses:
+        '200':
+          description: Product deleted
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Product deleted successfully."
+        '400':
+          description: Invalid Product value
+  /product/search:
+    get:
+      tags:
+        - Product
+      operationId: getProductsByName
+      summary: Get Product by name
+      parameters:
+        - in: query
+          name: name
+          description: name of Product
+          required: true
+          schema:
+            type: string
+            example: 'phones'
       responses:
         'default':
-          description: Product deleted
-
+          description: A list of Product
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
   /sales:
     get:
       tags:
@@ -313,50 +417,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserDTO'
   /user/login:
-      post:
-        tags:
-          - Authentication
-        summary: Logs usern into the system
-        description: ''
-        operationId: login
-        requestBody:
-          description: User Login
+    post:
+      tags:
+        - Authentication
+      summary: Logs usern into the system
+      description: ''
+      operationId: login
+      requestBody:
+        description: User Login
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginPayload'
+      responses:
+        'default':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the usern
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginPayload'
-        responses:
-          'default':
-            description: successful operation
-            headers:
-              X-Rate-Limit:
-                description: calls per hour allowed by the usern
-                schema:
-                  type: integer
-                  format: int32
-              X-Expires-After:
-                description: date in UTC when token expires
-                schema:
-                  type: string
-                  format: date-time
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Token'
-          '400':
-            description: Invalid usernname/password supplied
+                $ref: '#/components/schemas/Token'
+        '400':
+          description: Invalid usernname/password supplied
   /user/logout:
-      get:
-        tags:
-          - Authentication
-        summary: Logs out current logged in user session
-        description: ''
-        operationId: logout
-        parameters: [ ]
-        responses:
-          default:
-            description: successful operation
-
+    get:
+      tags:
+        - Authentication
+      summary: Logs out current logged in user session
+      description: ''
+      operationId: logout
+      parameters: [ ]
+      responses:
+        default:
+          description: successful operation
 components:
   schemas:
     CategoryDTO:
@@ -384,10 +487,10 @@ components:
         quantity:
           type: integer
           format: int64
-        unitPrice:
+        unitBuyPrice:
           type: number
           format: double
-        sellPrice:
+        unitSellPrice:
           type: number
           format: double
         buyDate:
@@ -434,7 +537,7 @@ components:
         id:
           type: integer
           format: int64
-        username:
+        usernname:
           type: string
         firstName:
           type: string
@@ -445,9 +548,6 @@ components:
           type: string
         password:
           type: string
-        logged:
-          type: boolean
-          example: true
         phone:
           type: string
         usernStatus:
