@@ -20,12 +20,6 @@ public class CategoryController implements CategoryApi {
     private final ICategoryService categoryService;
 
     @Override
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        var categoryListDTO = categoryService.getAll();
-        return ResponseEntity.ok(categoryListDTO);
-    }
-
-    @Override
     public ResponseEntity<CategoryPage> categoriesPerPage(@RequestParam Integer page) {
         return ResponseEntity.ok(categoryService.getByPage(--page));
     }

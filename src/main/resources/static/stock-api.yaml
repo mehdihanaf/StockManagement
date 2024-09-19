@@ -448,7 +448,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Token'
         '400':
-          description: Invalid usernname/password supplied
+          description: Invalid username/password supplied
   /user/logout:
     get:
       tags:
@@ -537,7 +537,7 @@ components:
         id:
           type: integer
           format: int64
-        usernname:
+        username:
           type: string
         firstName:
           type: string
@@ -564,7 +564,7 @@ components:
           type: string
           example: 'ADMIN|STAFF'
       required:
-        - usernname
+        - username
         - password
         - status
 
