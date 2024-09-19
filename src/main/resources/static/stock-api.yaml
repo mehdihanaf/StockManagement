@@ -9,10 +9,12 @@ servers:
     description: Local server
 
 paths:
-  /categories:
+
+  /category/all:
     get:
       tags:
         - Category
+      operationId: getAllCategories
       summary: Get all categories
       responses:
         'default':
@@ -23,38 +25,40 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CategoryDTO'
-
-    post:
-      tags:
-        - Category
-      summary: Create a new category
-      requestBody:
-        description: Category to create
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CategoryDTO'
-        required: true
-      responses:
-        'default':
-          description: Category created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CategoryDTO'
-
-  /categories/{id}:
+  /category:
     get:
       tags:
         - Category
-      summary: Get a category by ID
+      operationId: CategoriesPerPage
+      summary: Get Categories by page number
+      #x-spring-paginated: true
+      parameters:
+        - in: query
+          name: page
+          description: number of page
+          required: true
+          schema:
+            type: integer
+            example: '1'
+      responses:
+        'default':
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: CategoryPageDTO
+  /category/{id}:
+    get:
+      tags:
+        - Category
+      operationId: getCategoryById
+      summary: Get Category by ID
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID of the category
       responses:
         'default':
           description: Category details
@@ -62,25 +66,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
-
+  /category/add:
+    post:
+      tags:
+        - Category
+      operationId: addCategory
+      summary: Create a new Category
+      requestBody:
+        description: Category to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryDTO'
+      responses:
+        'default':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDTO'
+  /category/edit/{id}:
     put:
       tags:
         - Category
+      operationId: editCategory
       summary: Update a category
       parameters:
         - in: path
-          name: id
           required: true
+          name: id
           schema:
             type: integer
-          description: ID of the category
+          description: ID of the Category
       requestBody:
         description: Updated category data
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CategoryDTO'
-        required: true
       responses:
         'default':
           description: Category updated
@@ -88,68 +111,79 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
-
+  /category/delete/{id}:
     delete:
       tags:
         - Category
-      summary: Delete a category
+      operationId: deleteCategory
+      summary: Delete a Category
       parameters:
         - in: path
-          name: id
           required: true
+          name: id
           schema:
             type: integer
-          description: ID of the category
+          description: ID of the Category
+      responses:
+        '200':
+          description: Category deleted
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Category deleted successfully."
+        '400':
+          description: Invalid Category value
+  /category/search:
+    get:
+      tags:
+        - Category
+      operationId: getCategoriesByName
+      summary: Get categories by name
+      parameters:
+        - in: query
+          name: name
+          description: name of category
+          required: true
+          schema:
+            type: string
+            example: 'phones'
       responses:
         'default':
-          description: Category deleted
-
-  /products:
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDTO'
+  /product/all:
     get:
       tags:
         - Product
-      summary: Get all products
+      operationId: getAllProducts
+      summary: Get all Products
       responses:
         'default':
-          description: A list of products
+          description: A list of Products
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
-
-    post:
-      tags:
-        - Product
-      summary: Create a new product
-      requestBody:
-        description: Product to create
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProductDTO'
-        required: true
-      responses:
-        'default':
-          description: Product created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductDTO'
-
-  /products/{id}:
+  /product/{id}:
     get:
       tags:
         - Product
-      summary: Get a product by ID
+      operationId: getProductById
+      summary: Get Product by ID
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID of the product
       responses:
         'default':
           description: Product details
@@ -157,25 +191,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
-
-    put:
+  /product:
+    get:
       tags:
         - Product
-      summary: Update a product
+      operationId: ProductsPerPage
+      summary: Get Product by page number
+      #x-spring-paginated: true
       parameters:
-        - in: path
-          name: id
+        - in: query
+          name: page
+          description: number of page
           required: true
           schema:
             type: integer
-          description: ID of the product
+            example: '1'
+      responses:
+        'default':
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: CategoryPageDTO
+  /product/add:
+    post:
+      tags:
+        - Product
+      operationId: addProduct
+      summary: Create a new Product
       requestBody:
-        description: Updated product data
+        description: Product to create
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductDTO'
-        required: true
+      responses:
+        'default':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDTO'
+  /product/edit/{id}:
+    put:
+      tags:
+        - Product
+      operationId: editProduct
+      summary: Update a Product
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: ID of the Product
+      requestBody:
+        description: Updated Product data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDTO'
       responses:
         'default':
           description: Product updated
@@ -183,22 +258,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
-
+  /product/delete/{id}:
     delete:
       tags:
         - Product
-      summary: Delete a product
+      operationId: deleteProduct
+      summary: Delete a Product
       parameters:
         - in: path
-          name: id
           required: true
+          name: id
           schema:
             type: integer
-          description: ID of the product
+          description: ID of the Product
+      responses:
+        '200':
+          description: Product deleted
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Product deleted successfully."
+        '400':
+          description: Invalid Product value
+  /product/search:
+    get:
+      tags:
+        - Product
+      operationId: getProductsByName
+      summary: Get Product by name
+      parameters:
+        - in: query
+          name: name
+          description: name of Product
+          required: true
+          schema:
+            type: string
+            example: 'phones'
       responses:
         'default':
-          description: Product deleted
-
+          description: A list of Product
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
   /sales:
     get:
       tags:
@@ -292,144 +397,59 @@ paths:
       responses:
         'default':
           description: Sale deleted
-  /usern:
+
+  /user/login:
     post:
       tags:
-        - usern
-      summary: Create usern
-      description: This can only be done by the logged in usern.
-      operationId: createusern
-      requestBody:
-        description: Created usern object
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/usernDTO'
+        - Authentication
+      summary: Logs usern into the system
+      description: ''
+      operationId: login
+      parameters:
+        - name: usernname
+          in: query
+          description: The usern name for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        'default':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the usern
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid usernname/password supplied
+  /user/logout:
+    get:
+      tags:
+        - Authentication
+      summary: Logs out current logged in usern session
+      description: ''
+      operationId: logoutusern
+      parameters: [ ]
       responses:
         default:
           description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/usernDTO'
-  /usern/login:
-      get:
-        tags:
-          - usern
-        summary: Logs usern into the system
-        description: ''
-        operationId: loginusern
-        parameters:
-          - name: usernname
-            in: query
-            description: The usern name for login
-            required: false
-            schema:
-              type: string
-          - name: password
-            in: query
-            description: The password for login in clear text
-            required: false
-            schema:
-              type: string
-        responses:
-          'default':
-            description: successful operation
-            headers:
-              X-Rate-Limit:
-                description: calls per hour allowed by the usern
-                schema:
-                  type: integer
-                  format: int32
-              X-Expires-After:
-                description: date in UTC when token expires
-                schema:
-                  type: string
-                  format: date-time
-            content:
-              application/json:
-                schema:
-                  type: string
-          '400':
-            description: Invalid usernname/password supplied
-  /usern/logout:
-      get:
-        tags:
-          - usern
-        summary: Logs out current logged in usern session
-        description: ''
-        operationId: logoutusern
-        parameters: [ ]
-        responses:
-          default:
-            description: successful operation
-  /usern/{usernname}:
-      get:
-        tags:
-          - usern
-        summary: Get usern by usern name
-        description: ''
-        operationId: getusernByName
-        parameters:
-          - name: usernname
-            in: path
-            description: 'The name that needs to be fetched. Use usern1 for testing. '
-            required: true
-            schema:
-              type: string
-        responses:
-          'default':
-            description: successful operation
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/usernDTO'
-          '400':
-            description: Invalid usernname supplied
-          '404':
-            description: usern not found
-      put:
-        tags:
-          - usern
-        summary: Update usern
-        description: This can only be done by the logged in usern.
-        operationId: updateusern
-        parameters:
-          - name: usernname
-            in: path
-            description: name that need to be deleted
-            required: true
-            schema:
-              type: string
-        requestBody:
-          description: Update an existent usern in the store
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/usernDTO'
-        responses:
-          default:
-            description: successful operation
-      delete:
-        tags:
-          - usern
-        summary: Delete usern
-        description: This can only be done by the logged in usern.
-        operationId: deleteusern
-        parameters:
-          - name: usernname
-            in: path
-            description: The name that needs to be deleted
-            required: true
-            schema:
-              type: string
-        responses:
-          default:
-            description: usernname deleted
-          '400':
-            description: Invalid usernname supplied
-          '404':
-            description: usern not found
+
 components:
   schemas:
     CategoryDTO:
@@ -457,10 +477,10 @@ components:
         quantity:
           type: integer
           format: int64
-        unitPrice:
+        unitBuyPrice:
           type: number
           format: double
-        sellPrice:
+        unitSellPrice:
           type: number
           format: double
         buyDate:
@@ -501,7 +521,7 @@ components:
         - saleQuantity
         - discount
         - product
-    usernDTO:
+    UserDTO:
       type: object
       properties:
         id:
