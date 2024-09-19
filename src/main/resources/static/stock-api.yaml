@@ -457,17 +457,15 @@ components:
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
         name:
           type: string
-      required:
-        - name
     ProductDTO:
       type: object
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
         productName:
           type: string
         productCode:
@@ -495,13 +493,12 @@ components:
         - unitPrice
         - sellPrice
         - buyDate
-        - category
     SaleDTO:
       type: object
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
         description:
           type: string
         saleDate:
