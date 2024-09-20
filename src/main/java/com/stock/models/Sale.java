@@ -6,8 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -23,13 +22,13 @@ public class Sale {
 
     private  String description;
 
-    private Date saleDate;
+    private LocalDate saleDate;
 
     private Long saleQuantity;
 
     private Double  discount;
 
-    @OneToOne
+    @ManyToOne
     private Product product;
 
     }

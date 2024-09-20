@@ -191,28 +191,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
-  /product:
-    get:
-      tags:
-        - Product
-      operationId: ProductsPerPage
-      summary: Get Product by page number
-      #x-spring-paginated: true
-      parameters:
-        - in: query
-          name: page
-          description: number of page
-          required: true
-          schema:
-            type: integer
-            example: '1'
-      responses:
-        'default':
-          description: A list of products
-          content:
-            application/json:
-              schema:
-                type: CategoryPageDTO
   /product/add:
     post:
       tags:
@@ -226,12 +204,18 @@ paths:
             schema:
               $ref: '#/components/schemas/ProductDTO'
       responses:
-        'default':
+        '200':
           description: Product created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
+        '400':
+          description: Insufficient product quantity
+          content:
+            text/plain:
+              schema:
+                type: string
   /product/edit/{id}:
     put:
       tags:
@@ -304,32 +288,52 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
-  /sales:
+  /sale/all:
     get:
       tags:
         - Sale
-      summary: Get all sales
+      operationId: getAllSales
+      summary: Get all Sales
       responses:
         'default':
-          description: A list of sales
+          description: A list of Sales
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/SaleDTO'
-
+  /sale/{id}:
+    get:
+      tags:
+        - Sale
+      operationId: getSaleById
+      summary: Get Sale by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        'default':
+          description: Sale details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaleDTO'
+  /sale/add:
     post:
       tags:
         - Sale
-      summary: Create a new sale
+      operationId: addSale
+      summary: Create a new Sale
       requestBody:
         description: Sale to create
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/SaleDTO'
-        required: true
       responses:
         'default':
           description: Sale created
@@ -337,45 +341,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SaleDTO'
-  /sales/{id}:
-    get:
-      tags:
-        - Sale
-      summary: Get a sale by ID
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: ID of the sale
-      responses:
-        default:
-          description: Sale details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SaleDTO'
-        '400':
-          description: Invalid Sale ID
+  /sale/edit/{id}:
     put:
       tags:
         - Sale
-      summary: Update a sale
+      operationId: editSale
+      summary: Update a Sale
       parameters:
         - in: path
-          name: id
           required: true
+          name: id
           schema:
             type: integer
-          description: ID of the sale
+          description: ID of the Sale
       requestBody:
-        description: Updated sale data
+        description: Updated Sale data
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/SaleDTO'
-        required: true
       responses:
         'default':
           description: Sale updated
@@ -383,21 +367,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SaleDTO'
+  /sale/delete/{id}:
     delete:
       tags:
         - Sale
-      summary: Delete a sale
+      operationId: deleteSale
+      summary: Delete a Sale
       parameters:
         - in: path
-          name: id
           required: true
+          name: id
           schema:
             type: integer
-          description: ID of the sale
+          description: ID of the Sale
+      responses:
+        '200':
+          description: Sale deleted
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Sale deleted successfully."
+        '400':
+          description: Invalid Sale value
+  /sale/search:
+    get:
+      tags:
+        - Sale
+      operationId: getSalesByName
+      summary: Get Sale by name
+      parameters:
+        - in: query
+          name: name
+          description: name of Sale
+          required: true
+          schema:
+            type: string
+            example: 'sale-1'
       responses:
         'default':
-          description: Sale deleted
-
+          description: A list of Sales
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SaleDTO'
   /user/login:
     post:
       tags:
@@ -486,13 +501,6 @@ components:
           format: date
         category:
           $ref: '#/components/schemas/CategoryDTO'
-      required:
-        - productName
-        - productCode
-        - quantity
-        - unitPrice
-        - sellPrice
-        - buyDate
     SaleDTO:
       type: object
       properties:
@@ -517,7 +525,6 @@ components:
         - saleDate
         - saleQuantity
         - discount
-        - product
     UserDTO:
       type: object
       properties:

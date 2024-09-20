@@ -120,7 +120,9 @@
 							<inputSpec>${basedir}/src/main/resources/static/stock-api.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<library>spring-boot</library>
-							<schemaMappings>CategoryPageDTO=com.stock.pages.CategoryPage</schemaMappings>
+							<schemaMappings>
+								CategoryPageDTO=com.stock.pages.CategoryPage
+							</schemaMappings>
 							<modelNameSuffix>${swagger.modelNameSuffix}</modelNameSuffix>
 							<generateApis>true</generateApis>
 							<generateApiTests>false</generateApiTests>
