@@ -20,7 +20,6 @@ public class CategoryServiceImpl implements ICategoryService {
     private final ModelMapper modelMapper;
 
     public CategoryServiceImpl(ICategoryRepository categoryRepository, ModelMapper modelMapper) {
-
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
     }

@@ -491,6 +491,7 @@ components:
           format: int32
         name:
           type: string
+          minLength: 1  # Not empty
     ProductDTO:
       type: object
       properties:
@@ -499,19 +500,24 @@ components:
           format: int32
         productName:
           type: string
+          minLength: 1  # Not empty
         productCode:
           type: string
+          minLength: 1  # Not empty
         description:
           type: string
         quantity:
           type: integer
           format: int64
+          minimum: 1    # The value must be >= 0
         unitBuyPrice:
           type: number
           format: double
+          minimum: 0.0
         unitSellPrice:
           type: number
           format: double
+          minimum: 0.0
         buyDate:
           type: string
           format: date
@@ -525,15 +531,18 @@ components:
           format: int32
         description:
           type: string
+          minLength: 1  # Not empty
         saleDate:
           type: string
           format: date
         saleQuantity:
           type: integer
           format: int64
+          minimum: 1
         discount:
           type: number
           format: double
+          minimum: 0.0
         product:
           $ref: '#/components/schemas/ProductDTO'
       required:
