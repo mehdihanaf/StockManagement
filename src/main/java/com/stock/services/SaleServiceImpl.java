@@ -1,9 +1,8 @@
 package com.stock.services;
 
+import com.stock.exceptions.CustomResponseException;
 import com.stock.exceptions.TMNotFoundException;
-import com.stock.model.CategoryDTO;
 import com.stock.model.SaleDTO;
-import com.stock.models.Product;
 import com.stock.models.Sale;
 import com.stock.repository.IProductRepository;
 import com.stock.repository.ISaleRepository;
@@ -57,7 +56,7 @@ public class SaleServiceImpl implements ISaleService{
         var product = productRepository.findById(sale.getProduct().getId());
 
         if (product.get().getQuantity() < sale.getSaleQuantity()) {
-            throw new IllegalArgumentException("Insufficient product quantity for sale .");
+            throw new CustomResponseException("Insufficient product quantity for sale .");
         }
         var newQuantity = product.get().getQuantity() - sale.getSaleQuantity();
         product.get().setQuantity(newQuantity);
