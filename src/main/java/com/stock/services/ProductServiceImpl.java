@@ -13,13 +13,11 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class ProductServiceImpl implements IProductService{
+public class ProductServiceImpl implements IProductService {
 
     private final IProductRepository productRepository;
-
     private final ICategoryService categoryService;
     private final ModelMapper modelMapper;
-
 
 
     public ProductServiceImpl(IProductRepository productRepository, ICategoryService categoryService, ModelMapper modelMapper) {
@@ -39,11 +37,11 @@ public class ProductServiceImpl implements IProductService{
 
     }
 
-    public List<ProductDTO> getAll(){
+    public List<ProductDTO> getAll() {
 
         log.info("Fetching all products");
 
-        List<ProductDTO> listProducts =  productRepository.findAll().stream()
+        List<ProductDTO> listProducts = productRepository.findAll().stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
@@ -52,8 +50,8 @@ public class ProductServiceImpl implements IProductService{
         return listProducts;
 
 
-
     }
+
     @Override
     public ProductDTO add(ProductDTO productDTO) {
 
@@ -71,7 +69,7 @@ public class ProductServiceImpl implements IProductService{
     @Override
     public ProductDTO edit(Integer id, ProductDTO productDTO) {
 
-        log.info("retrieve product {} to edit with id : {}",productDTO, id);
+        log.info("retrieve product {} to edit with id : {}", productDTO, id);
         //trigger exception if id not exist
         getProductById(id);  //productDTO
         //TODO validations..
@@ -100,15 +98,15 @@ public class ProductServiceImpl implements IProductService{
 
         log.info("Retrieve product to lookup with name {}", name);
 
-        List<ProductDTO> listProductsByName =  productRepository.findByProductName(name).stream()
+        List<ProductDTO> listProductsByName = productRepository.findByProductName(name).stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
-        log.info("list of  Categories {} with name {}",listProductsByName, name);
+        log.info("list of  Categories {} with name {}", listProductsByName, name);
 
         return listProductsByName;
-        
-        
+
+
     }
 }
 

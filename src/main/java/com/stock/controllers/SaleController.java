@@ -3,6 +3,7 @@ package com.stock.controllers;
 import com.stock.StockManagementConstants;
 import com.stock.api.controller.SaleApi;
 import com.stock.model.SaleDTO;
+import com.stock.model.SaleDTO;
 import com.stock.models.Sale;
 import com.stock.services.ISaleService;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,14 @@ public class SaleController implements SaleApi {
          //}
     }
 
+    @Override
+    public ResponseEntity<SaleDTO> editSale(@PathVariable("id") Integer id, @RequestBody SaleDTO saleDTO) {
+
+        SaleDTO saleDTO1 = saleService.editSale(id, saleDTO);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(saleDTO1);
+    }
 
 
 }

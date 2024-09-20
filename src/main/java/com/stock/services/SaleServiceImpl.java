@@ -2,7 +2,10 @@ package com.stock.services;
 
 import com.stock.exceptions.CustomResponseException;
 import com.stock.exceptions.TMNotFoundException;
+import com.stock.model.CategoryDTO;
 import com.stock.model.SaleDTO;
+import com.stock.models.Category;
+import com.stock.models.Product;
 import com.stock.models.Sale;
 import com.stock.repository.IProductRepository;
 import com.stock.repository.ISaleRepository;
@@ -11,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -69,7 +73,28 @@ public class SaleServiceImpl implements ISaleService{
 
     @Override
     public SaleDTO editSale(Integer id, SaleDTO saleDTO) {
-        return null;
+
+        log.info("retrieve Sale to edit with id : {}", id);
+
+        var oldSaleQuantity=  getSaleById(id).getSaleQuantity();
+        var marge = saleDTO.getSaleQuantity() - oldSaleQuantity;
+
+        log.info("Old Quantity = {} , New Quantity = {}",oldSaleQuantity,saleDTO.getSaleQuantity());
+
+        saleDTO.setId(id);
+        Optional<Product> product = productRepository.findById(saleDTO.getProduct().getId());
+        var newProductQuantity = product.get().getQuantity() - marge;
+
+        if (newProductQuantity < 0) {
+            throw new CustomResponseException("Insufficient product quantity for sale .");
+        }
+        product.get().setQuantity(newProductQuantity);
+        productRepository.save(product.get());
+
+        Sale savedSale = saleRepository.save(modelMapper.map(saleDTO, Sale.class));
+        savedSale.setProduct(product.get());
+        return modelMapper.map(savedSale, SaleDTO.class);
+
     }
 
     @Override
