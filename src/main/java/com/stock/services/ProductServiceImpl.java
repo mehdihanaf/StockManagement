@@ -102,7 +102,7 @@ public class ProductServiceImpl implements IProductService {
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
-        log.info("list of  Categories {} with name {}", listProductsByName, name);
+        log.info("list of  Products {} with name {}", listProductsByName, name);
 
         return listProductsByName;
 

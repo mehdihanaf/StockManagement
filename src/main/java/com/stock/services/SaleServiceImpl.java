@@ -3,6 +3,7 @@ package com.stock.services;
 import com.stock.exceptions.CustomResponseException;
 import com.stock.exceptions.TMNotFoundException;
 import com.stock.model.CategoryDTO;
+import com.stock.model.ProductDTO;
 import com.stock.model.SaleDTO;
 import com.stock.models.Category;
 import com.stock.models.Product;
@@ -38,7 +39,6 @@ public class SaleServiceImpl implements ISaleService{
                 .map(sale -> modelMapper.map(sale, SaleDTO.class))
                 .orElseThrow(() -> new TMNotFoundException("Sale not found"));
     }
-
     @Override
     public List<SaleDTO> getAllSales() {
 
@@ -100,10 +100,28 @@ public class SaleServiceImpl implements ISaleService{
     @Override
     public void deleteSale(Integer id) {
 
+        log.info("Sale to Delete with id {}", id);
+        SaleDTO saleDTO = getSaleById(id);
+
+        ProductDTO productDTO = saleDTO.getProduct();
+        var updatedQuantity = productDTO.getQuantity() + saleDTO.getSaleQuantity();
+        productDTO.setQuantity(updatedQuantity);
+         modelMapper.map(productDTO, Product.class);
+        productRepository.save(modelMapper.map(productDTO, Product.class));
+
+        saleRepository.deleteById(id);
+        log.info(" Sale Deleted with id {}", id);
     }
 
     @Override
-    public List<SaleDTO> searchSale(String name) {
-        return null;
+    public List<SaleDTO> searchSale(String description) {
+
+        log.info("Retrieve sale description to lookup with name {}",description );
+        List<SaleDTO> listSalesByName = saleRepository.findByDescription(description).stream()
+                .map(sale -> modelMapper.map(sale, SaleDTO.class))
+                .toList();
+        log.info("list of  Categories {} with name {}", listSalesByName, description);
+        return listSalesByName;
+
     }
 }

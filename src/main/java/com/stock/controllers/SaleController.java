@@ -2,16 +2,14 @@ package com.stock.controllers;
 
 import com.stock.StockManagementConstants;
 import com.stock.api.controller.SaleApi;
+import com.stock.model.ProductDTO;
 import com.stock.model.SaleDTO;
 import com.stock.model.SaleDTO;
 import com.stock.models.Sale;
 import com.stock.services.ISaleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -66,6 +64,26 @@ public class SaleController implements SaleApi {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(saleDTO1);
+    }
+
+    @Override
+    public ResponseEntity<String> deleteSale(@PathVariable("id") Integer id) {
+
+        //todo validation
+        saleService.deleteSale(id);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("Sale is deleted");
+    }
+
+    @Override
+    public ResponseEntity<List<SaleDTO>> getSalesByName(@RequestParam String description) {
+
+        List<SaleDTO> listSales = saleService.searchSale(description);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(listSales);
     }
 
 

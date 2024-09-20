@@ -60,12 +60,14 @@ paths:
           schema:
             type: integer
       responses:
-        'default':
+        '200':
           description: Category details
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
+        '400':
+          description: Category not found
   /category/add:
     post:
       tags:
@@ -79,7 +81,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CategoryDTO'
       responses:
-        'default':
+        '200':
           description: Product created
           content:
             application/json:
@@ -105,12 +107,14 @@ paths:
             schema:
               $ref: '#/components/schemas/CategoryDTO'
       responses:
-        'default':
+        '200':
           description: Category updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
+        '400':
+          description: Category not found
   /category/delete/{id}:
     delete:
       tags:
@@ -149,7 +153,7 @@ paths:
             type: string
             example: 'phones'
       responses:
-        'default':
+        '200':
           description: A list of categories
           content:
             application/json:
@@ -164,7 +168,7 @@ paths:
       operationId: getAllProducts
       summary: Get all Products
       responses:
-        'default':
+        '200':
           description: A list of Products
           content:
             application/json:
@@ -185,12 +189,14 @@ paths:
           schema:
             type: integer
       responses:
-        'default':
+        '200':
           description: Product details
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
+        '400':
+          description: Product not found
   /product/add:
     post:
       tags:
@@ -210,12 +216,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
-        '400':
-          description: Insufficient product quantity
-          content:
-            text/plain:
-              schema:
-                type: string
   /product/edit/{id}:
     put:
       tags:
@@ -236,7 +236,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ProductDTO'
       responses:
-        'default':
+        '200':
           description: Product updated
           content:
             application/json:
@@ -280,7 +280,7 @@ paths:
             type: string
             example: 'phones'
       responses:
-        'default':
+        '200':
           description: A list of Product
           content:
             application/json:
@@ -295,7 +295,7 @@ paths:
       operationId: getAllSales
       summary: Get all Sales
       responses:
-        'default':
+        '200':
           description: A list of Sales
           content:
             application/json:
@@ -316,12 +316,14 @@ paths:
           schema:
             type: integer
       responses:
-        'default':
+        '200':
           description: Sale details
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SaleDTO'
+        '400':
+          description: Sale not found
   /sale/add:
     post:
       tags:
@@ -342,7 +344,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SaleDTO'
         '400':
-          description: Bad Request - insufficient quantity
+          description: insufficient quantity
           content:
             application/json:
               schema:
@@ -367,12 +369,20 @@ paths:
             schema:
               $ref: '#/components/schemas/SaleDTO'
       responses:
-        'default':
+        '200':
           description: Sale updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SaleDTO'
+        '404':
+          description: Sale not found
+        '400':
+          description: Insufficient product quantity
+          content:
+            text/plain:
+              schema:
+                type: string
   /sale/delete/{id}:
     delete:
       tags:
@@ -395,7 +405,7 @@ paths:
                 type: string
                 example: "Sale deleted successfully."
         '400':
-          description: Invalid Sale value
+          description: Sale not found
   /sale/search:
     get:
       tags:
@@ -411,7 +421,7 @@ paths:
             type: string
             example: 'sale-1'
       responses:
-        'default':
+        '200':
           description: A list of Sales
           content:
             application/json:
