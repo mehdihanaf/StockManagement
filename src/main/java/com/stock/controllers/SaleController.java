@@ -2,15 +2,11 @@ package com.stock.controllers;
 
 import com.stock.StockManagementConstants;
 import com.stock.api.controller.SaleApi;
-import com.stock.model.ProductDTO;
 import com.stock.model.SaleDTO;
-import com.stock.model.SaleDTO;
-import com.stock.models.Sale;
 import com.stock.services.ISaleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -48,7 +44,7 @@ public class SaleController implements SaleApi {
     @Override
     public ResponseEntity<SaleDTO> addSale(@RequestBody SaleDTO saleDTO) {
 
-            SaleDTO saleDTO1 = saleService.add(saleDTO);
+            SaleDTO saleDTO1 = saleService.addSale(saleDTO);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(saleDTO1);

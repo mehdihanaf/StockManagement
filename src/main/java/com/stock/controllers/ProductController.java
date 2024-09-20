@@ -37,7 +37,7 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
 
-        List<ProductDTO> listproducts = productService.getAll();
+        List<ProductDTO> listproducts = productService.getAllProducts();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -48,7 +48,7 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
 
-        ProductDTO productDTO1 = productService.add(productDTO);
+        ProductDTO productDTO1 = productService.addProduct(productDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(productDTO1);
@@ -57,7 +57,7 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<ProductDTO> editProduct(@PathVariable("id") Integer id, @RequestBody ProductDTO productDTO) {
 
-        ProductDTO productDTO1 = productService.edit(id, productDTO);
+        ProductDTO productDTO1 = productService.editProduct(id, productDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(productDTO1);
@@ -67,7 +67,7 @@ public class ProductController implements ProductApi {
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer id) {
 
         //todo validation
-        productService.delete(id);
+        productService.deleteProduct(id);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -78,7 +78,7 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<List<ProductDTO>> getProductsByName(@RequestParam String name) {
 
-        List<ProductDTO> products = productService.search(name);
+        List<ProductDTO> products = productService.searchProductByName(name);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(products);

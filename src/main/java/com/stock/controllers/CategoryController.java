@@ -24,7 +24,7 @@ public class CategoryController implements CategoryApi {
     @Override
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
 
-        List<CategoryDTO> categories = categoryService.getAll();
+        List<CategoryDTO> categories = categoryService.getAllCategories();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categories);
@@ -32,13 +32,13 @@ public class CategoryController implements CategoryApi {
 
     @Override
     public ResponseEntity<CategoryPage> categoriesPerPage(@RequestParam Integer page) {
-        return ResponseEntity.ok(categoryService.getByPage(--page));
+        return ResponseEntity.ok(categoryService.getCategoriesByPage(--page));
     }
 
     @Override
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable("id") Integer id) {
 
-        CategoryDTO categorydto = categoryService.getById(id);
+        CategoryDTO categorydto = categoryService.getCategoryById(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categorydto);
@@ -47,7 +47,7 @@ public class CategoryController implements CategoryApi {
     @Override
     public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO CategoryDTO) {
 
-        CategoryDTO categoryDTO1 = categoryService.add(CategoryDTO);
+        CategoryDTO categoryDTO1 = categoryService.addCategory(CategoryDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(categoryDTO1);
@@ -56,7 +56,7 @@ public class CategoryController implements CategoryApi {
     @Override
     public ResponseEntity<CategoryDTO> editCategory(@PathVariable("id") Integer id, @RequestBody CategoryDTO CategoryDTO) {
 
-        CategoryDTO CategoryDTO1 = categoryService.edit(id, CategoryDTO);
+        CategoryDTO CategoryDTO1 = categoryService.editCategory(id, CategoryDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(CategoryDTO1);
@@ -66,7 +66,7 @@ public class CategoryController implements CategoryApi {
     public ResponseEntity<String> deleteCategory(@PathVariable("id") Integer id) {
 
         //todo validation
-        categoryService.delete(id);
+        categoryService.deleteCategory(id);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -76,7 +76,7 @@ public class CategoryController implements CategoryApi {
     @Override
     public ResponseEntity<List<CategoryDTO>> getCategoriesByName(@RequestParam String name) {
 
-        List<CategoryDTO> categories = categoryService.search(name);
+        List<CategoryDTO> categories = categoryService.searchCategoryByName(name);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categories);

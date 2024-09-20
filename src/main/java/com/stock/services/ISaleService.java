@@ -11,7 +11,7 @@ public interface ISaleService {
 
     List<SaleDTO> getAllSales();
 
-    SaleDTO add(SaleDTO saleDTO);
+    SaleDTO addSale(SaleDTO saleDTO);
 
     SaleDTO editSale( Integer id, SaleDTO saleDTO);
 
