@@ -1,6 +1,8 @@
 package com.stock.services;
 
 import com.stock.model.ProductDTO;
+import com.stock.pages.ProductPage;
+
 import java.util.List;
 
 public interface IProductService {
@@ -16,7 +18,7 @@ public interface IProductService {
 
     void delete(Integer id);
 
-    //ProductPage getByPage(int page);
+    ProductPage getByPage(int page);
 
     List<ProductDTO> search(String name);
     

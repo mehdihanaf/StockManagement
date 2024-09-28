@@ -5,32 +5,19 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:8080/api/v1
+  - url: http://localhost:8081/api/v1
     description: Local server
 
-paths:
+security:
+  - jwt: []
 
+paths:
   /category/all:
     get:
       tags:
         - Category
       summary: Get all categories
-      responses:
-        'default':
-          description: A list of categories
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CategoryDTO'
-
-    post:
-      tags:
-        - Category
       operationId: CategoriesPerPage
-      summary: Get Categories by page number
-      #x-spring-paginated: true
       parameters:
         - in: query
           name: page
@@ -46,6 +33,7 @@ paths:
             application/json:
               schema:
                 type: CategoryPageDTO
+
   /category/{id}:
     get:
       tags:
@@ -156,21 +144,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CategoryDTO'
-  /product/all:
-    get:
-      tags:
-        - Product
-      operationId: getAllProducts
-      summary: Get all Products
-      responses:
-        'default':
-          description: A list of Products
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProductDTO'
+
   /product/{id}:
     get:
       tags:
@@ -190,7 +164,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
-  /product:
+  /product/all:
     get:
       tags:
         - Product
@@ -211,7 +185,7 @@ paths:
           content:
             application/json:
               schema:
-                type: CategoryPageDTO
+                type: ProductPageDTO
   /product/add:
     post:
       tags:
@@ -461,6 +435,11 @@ paths:
         default:
           description: successful operation
 components:
+  securitySchemes:
+    jwt:
+      type: "http"
+      scheme: "bearer"
+      bearerFormat: "JWT"
   schemas:
     CategoryDTO:
       type: object
@@ -615,3 +594,4 @@ components:
         details:
           type: string
           example: "Common Response returned from the server"
+    

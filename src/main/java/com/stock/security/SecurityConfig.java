@@ -2,11 +2,13 @@ package com.stock.security;
 
 import com.stock.configs.JwtAuthenticationEntryPoint;
 import com.stock.configs.JwtRequestFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,7 +35,9 @@ public class SecurityConfig {
 
     private final UserDetailsService jwtUserDetailsService;
 
+    @Autowired
     private final JwtRequestFilter jwtRequestFilter;
+
 
     @Value("${allowed.origins}")
     private String allowedOrigins;
@@ -67,21 +71,45 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+        /*http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(requests -> requests
-            .requestMatchers("/**", "/api/v1/user/login", "/api/v1/test")
-            .authenticated())
+            .requestMatchers("/api/v1/user/login").permitAll())
             .httpBasic(withDefaults())
             .sessionManagement(management -> management
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(new AuthFilter(authService), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        http.httpBasic(AbstractHttpConfigurer::disable);*/
+
+        /*http.authorizeRequests(authorizeRequests -> authorizeRequests.requestMatchers("/api/v1/user/login").permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .httpBasic(withDefaults())
+                .formLogin(withDefaults())
+                .csrf(AbstractHttpConfigurer::disable);
+        return http.build();*/
+
+        return http
+                .cors(cors -> cors.disable())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement((session) ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeHttpRequests(authorize -> {
+                            authorize
+                                    .requestMatchers("/api/v1/user/login/**").permitAll()
+                                    .anyRequest().authenticated();
+                        }
+                )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .httpBasic(Customizer.withDefaults())
+                .build();
+
     }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/js/**",
-                "/images/**", "/v3/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security",
+                "/images/**", "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger-ui/**", "/swagger-ui/**", "/v3/api-docs/**");
     }
 

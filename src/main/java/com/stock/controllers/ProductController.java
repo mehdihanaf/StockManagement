@@ -3,11 +3,13 @@ package com.stock.controllers;
 import com.stock.StockManagementConstants;
 import com.stock.api.controller.ProductApi;
 import com.stock.model.ProductDTO;
+import com.stock.pages.ProductPage;
 import com.stock.services.IProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,7 +32,9 @@ public class ProductController implements ProductApi {
                 .body(productdto);
     }
 
-
+    public ResponseEntity<ProductPage> productsPerPage(@RequestParam Integer page) {
+        return ResponseEntity.ok(productService.getByPage(--page));
+    }
 
 
     /*

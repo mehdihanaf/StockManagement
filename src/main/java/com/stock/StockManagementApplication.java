@@ -12,10 +12,6 @@ public class StockManagementApplication {
 		SpringApplication.run(StockManagementApplication.class, args);
 	}
 
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
 
 }
 
