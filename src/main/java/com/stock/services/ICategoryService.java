@@ -2,26 +2,24 @@ package com.stock.services;
 
 import com.stock.model.CategoryDTO;
 import com.stock.pages.CategoryPage;
-import org.springframework.data.domain.Page;
-
 import java.util.List;
 
 
 public interface ICategoryService {
 
 
-    CategoryDTO getById(Integer id);
+    CategoryDTO getCategoryById(Integer id);
 
-    List<CategoryDTO> getAll();
+    List<CategoryDTO> getAllCategories();
 
-    CategoryDTO add(CategoryDTO t);
+    CategoryDTO addCategory(CategoryDTO t);
 
-    CategoryDTO edit( Integer id, CategoryDTO t);
+    CategoryDTO editCategory(Integer id, CategoryDTO t);
 
-    void delete(Integer id);
+    void deleteCategory(Integer id);
 
-    CategoryPage getByPage(int page);
+    CategoryPage getCategoriesByPage(int page);
 
-    List<CategoryDTO> search(String name);
+    List<CategoryDTO> searchCategoryByName(String name);
 
 }

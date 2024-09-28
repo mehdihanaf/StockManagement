@@ -20,46 +20,80 @@ public class CategoryController implements CategoryApi {
     private final ICategoryService categoryService;
 
     @Override
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+
+        List<CategoryDTO> categories = categoryService.getAllCategories();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categories);
+    }
+
+    @Override
     public ResponseEntity<CategoryPage> categoriesPerPage(@RequestParam Integer page) {
-        return ResponseEntity.ok(categoryService.getByPage(--page));
+        return ResponseEntity.ok(categoryService.getCategoriesByPage(--page));
     }
 
     @Override
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable("id") Integer id) {
-        var categoryDTO = categoryService.getById(id);
-        return ResponseEntity.ok(categoryDTO);
+
+        CategoryDTO categorydto = categoryService.getCategoryById(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categorydto);
     }
 
     @Override
-    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO) {
-        var categoryResult = categoryService.add(categoryDTO);
+    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO CategoryDTO) {
+
+        CategoryDTO categoryDTO1 = categoryService.addCategory(CategoryDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(categoryResult);
+                .body(categoryDTO1);
     }
 
     @Override
-    public ResponseEntity<CategoryDTO> editCategory(@PathVariable("id") Integer id, @RequestBody CategoryDTO categoryDTO) {
-        var updatedCategoryDTO = categoryService.edit(id, categoryDTO);
+    public ResponseEntity<CategoryDTO> editCategory(@PathVariable("id") Integer id, @RequestBody CategoryDTO CategoryDTO) {
+
+        CategoryDTO CategoryDTO1 = categoryService.editCategory(id, CategoryDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(updatedCategoryDTO);
+                .body(CategoryDTO1);
     }
 
     @Override
     public ResponseEntity<String> deleteCategory(@PathVariable("id") Integer id) {
-        categoryService.delete(id);
+
+        //todo validation
+        categoryService.deleteCategory(id);
+
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .body("category is deleted");
     }
 
     @Override
     public ResponseEntity<List<CategoryDTO>> getCategoriesByName(@RequestParam String name) {
-        var categoriesDTOList = categoryService.search(name);
+
+        List<CategoryDTO> categories = categoryService.searchCategoryByName(name);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(categoriesDTOList);
+                .body(categories);
     }
+
+    /*
+     //TODO...
+     makatreturnish list
+    @GetMapping("/categories/page/{id}")
+    public ResponseEntity<List<CategoryDTO>> getCategoriesByPage(@PathVariable("id") int id) {
+
+        List<CategoryDTO> categoriesByPage = categoryServiceI.getByPage(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categoriesByPage);
+    }
+
+
+
+*/
 
 }

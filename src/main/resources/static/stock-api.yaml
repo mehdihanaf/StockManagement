@@ -12,12 +12,29 @@ security:
   - jwt: []
 
 paths:
+
   /category/all:
     get:
       tags:
         - Category
+      operationId: getAllCategories
       summary: Get all categories
+      responses:
+        'default':
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDTO'
+  /category:
+    get:
+      tags:
+        - Category
       operationId: CategoriesPerPage
+      summary: Get Categories by page number
+      #x-spring-paginated: true
       parameters:
         - in: query
           name: page
@@ -33,7 +50,6 @@ paths:
             application/json:
               schema:
                 type: CategoryPageDTO
-
   /category/{id}:
     get:
       tags:
@@ -47,12 +63,14 @@ paths:
           schema:
             type: integer
       responses:
-        'default':
+        '200':
           description: Category details
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
+        '400':
+          description: Category not found
   /category/add:
     post:
       tags:
@@ -66,7 +84,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CategoryDTO'
       responses:
-        'default':
+        '200':
           description: Product created
           content:
             application/json:
@@ -92,12 +110,14 @@ paths:
             schema:
               $ref: '#/components/schemas/CategoryDTO'
       responses:
-        'default':
+        '200':
           description: Category updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryDTO'
+        '400':
+          description: Category not found
   /category/delete/{id}:
     delete:
       tags:
@@ -136,7 +156,7 @@ paths:
             type: string
             example: 'phones'
       responses:
-        'default':
+        '200':
           description: A list of categories
           content:
             application/json:
@@ -144,7 +164,21 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CategoryDTO'
-
+  /product/all:
+    get:
+      tags:
+        - Product
+      operationId: getAllProducts
+      summary: Get all Products
+      responses:
+        '200':
+          description: A list of Products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
   /product/{id}:
     get:
       tags:
@@ -158,34 +192,14 @@ paths:
           schema:
             type: integer
       responses:
-        'default':
+        '200':
           description: Product details
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDTO'
-  /product/all:
-    get:
-      tags:
-        - Product
-      operationId: ProductsPerPage
-      summary: Get Product by page number
-      #x-spring-paginated: true
-      parameters:
-        - in: query
-          name: page
-          description: number of page
-          required: true
-          schema:
-            type: integer
-            example: '1'
-      responses:
-        'default':
-          description: A list of products
-          content:
-            application/json:
-              schema:
-                type: ProductPageDTO
+        '400':
+          description: Product not found
   /product/add:
     post:
       tags:
@@ -199,7 +213,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ProductDTO'
       responses:
-        'default':
+        '200':
           description: Product created
           content:
             application/json:
@@ -225,7 +239,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ProductDTO'
       responses:
-        'default':
+        '200':
           description: Product updated
           content:
             application/json:
@@ -269,7 +283,7 @@ paths:
             type: string
             example: 'phones'
       responses:
-        'default':
+        '200':
           description: A list of Product
           content:
             application/json:
@@ -277,119 +291,147 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
-  /sales:
+  /sale/all:
     get:
       tags:
         - Sale
-      summary: Get all sales
+      operationId: getAllSales
+      summary: Get all Sales
       responses:
-        'default':
-          description: A list of sales
+        '200':
+          description: A list of Sales
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/SaleDTO'
-
-    post:
-      tags:
-        - Sale
-      summary: Create a new sale
-      requestBody:
-        description: Sale to create
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SaleDTO'
-        required: true
-      responses:
-        'default':
-          description: Sale created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SaleDTO'
-  /sales/{id}:
+  /sale/{id}:
     get:
       tags:
         - Sale
-      summary: Get a sale by ID
+      operationId: getSaleById
+      summary: Get Sale by ID
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID of the sale
       responses:
-        default:
+        '200':
           description: Sale details
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SaleDTO'
         '400':
-          description: Invalid Sale ID
-    put:
+          description: Sale not found
+  /sale/add:
+    post:
       tags:
         - Sale
-      summary: Update a sale
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: ID of the sale
+      operationId: addSale
+      summary: Create a new Sale
       requestBody:
-        description: Updated sale data
+        description: Sale to create
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/SaleDTO'
-        required: true
       responses:
-        'default':
+        '200':
+          description: Sale created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaleDTO'
+        '400':
+          description: insufficient quantity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sale/edit/{id}:
+    put:
+      tags:
+        - Sale
+      operationId: editSale
+      summary: Update a Sale
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+          description: ID of the Sale
+      requestBody:
+        description: Updated Sale data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaleDTO'
+      responses:
+        '200':
           description: Sale updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SaleDTO'
+        '404':
+          description: Sale not found
+        '400':
+          description: Insufficient product quantity
+          content:
+            text/plain:
+              schema:
+                type: string
+  /sale/delete/{id}:
     delete:
       tags:
         - Sale
-      summary: Delete a sale
+      operationId: deleteSale
+      summary: Delete a Sale
       parameters:
         - in: path
-          name: id
           required: true
+          name: id
           schema:
             type: integer
-          description: ID of the sale
+          description: ID of the Sale
       responses:
-        'default':
+        '200':
           description: Sale deleted
-  /users:
-    post:
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Sale deleted successfully."
+        '400':
+          description: Sale not found
+  /sale/search:
+    get:
       tags:
-        - usern
-      summary: Create usern
-      description: This can only be done by the logged in usern.
-      operationId: createusern
-      requestBody:
-        description: Created usern object
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserDTO'
+        - Sale
+      operationId: getSalesByName
+      summary: Get Sale by name
+      parameters:
+        - in: query
+          name: name
+          description: name of Sale
+          required: true
+          schema:
+            type: string
+            example: 'sale-1'
       responses:
-        default:
-          description: successful operation
+        '200':
+          description: A list of Sales
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserDTO'
+                type: array
+                items:
+                  $ref: '#/components/schemas/SaleDTO'
   /user/login:
     post:
       tags:
@@ -446,62 +488,61 @@ components:
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
         name:
           type: string
-      required:
-        - name
+          minLength: 1  # Not empty
     ProductDTO:
       type: object
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
         productName:
           type: string
+          minLength: 1  # Not empty
         productCode:
           type: string
+          minLength: 1  # Not empty
         description:
           type: string
         quantity:
           type: integer
           format: int64
+          minimum: 1    # The value must be >= 0
         unitBuyPrice:
           type: number
           format: double
+          minimum: 0.0
         unitSellPrice:
           type: number
           format: double
+          minimum: 0.0
         buyDate:
           type: string
           format: date
         category:
           $ref: '#/components/schemas/CategoryDTO'
-      required:
-        - productName
-        - productCode
-        - quantity
-        - unitPrice
-        - sellPrice
-        - buyDate
-        - category
     SaleDTO:
       type: object
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
         description:
           type: string
+          minLength: 1  # Not empty
         saleDate:
           type: string
           format: date
         saleQuantity:
           type: integer
           format: int64
+          minimum: 1
         discount:
           type: number
           format: double
+          minimum: 0.0
         product:
           $ref: '#/components/schemas/ProductDTO'
       required:
@@ -509,7 +550,6 @@ components:
         - saleDate
         - saleQuantity
         - discount
-        - product
     UserDTO:
       type: object
       properties:
@@ -533,19 +573,22 @@ components:
           type: integer
           description: usern Status
           format: int32
-        deleted:
-          type: boolean
-          example: true
-        active:
-          type: boolean
-          example: true
-        roles:
-          type: string
-          example: 'ADMIN|STAFF'
       required:
         - username
         - password
         - status
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: "ERR_400"
+        message:
+          type: string
+          example: "Invalid item ID provided"
+      required:
+        - errorCode
+        - message
 
     LoginPayload:
       type: object
@@ -594,4 +637,4 @@ components:
         details:
           type: string
           example: "Common Response returned from the server"
-    
+

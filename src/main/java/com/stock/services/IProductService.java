@@ -8,19 +8,19 @@ import java.util.List;
 public interface IProductService {
 
 
-    ProductDTO getById(Integer id);
+    ProductDTO getProductById(Integer id);
 
-    List<ProductDTO> getAll();
+    List<ProductDTO> getAllProducts();
 
-    ProductDTO add(ProductDTO t);
+    ProductDTO addProduct(ProductDTO t);
 
-    ProductDTO edit( Integer id, ProductDTO t);
+    ProductDTO editProduct(Integer id, ProductDTO t);
 
-    void delete(Integer id);
+    void deleteProduct(Integer id);
 
     ProductPage getByPage(int page);
 
-    List<ProductDTO> search(String name);
+    List<ProductDTO> searchProductByName(String name);
     
     
     
