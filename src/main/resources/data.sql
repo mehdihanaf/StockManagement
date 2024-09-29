@@ -1,3 +1,7 @@
+INSERT INTO stock_user (active,deleted,id,"logged",email,first_name,last_name,"password",phone,roles,"token",username) VALUES
+    (true,false,1,false,'admin@gmail.com','admin','lastname','$2a$12$zejkoE5.FWWTZObedy4f9ePgtya4u5ejJH8HswW.PImWXlY0nnVsK','0603041583','admin',NULL,'admin');
+
+
 INSERT INTO CATEGORY (ID, NAME)
 VALUES
     (1001, 'Telephones'),
