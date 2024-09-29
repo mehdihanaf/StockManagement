@@ -573,6 +573,15 @@ components:
           type: integer
           description: usern Status
           format: int32
+        deleted:
+          type: boolean
+          example: true
+        active:
+          type: boolean
+          example: true
+        roles:
+          type: string
+          example: 'ADMIN|STAFF'
       required:
         - username
         - password

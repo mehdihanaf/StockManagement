@@ -13,11 +13,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class ProductServiceImpl implements IProductService {
-
     private final IProductRepository productRepository;
     private final ICategoryService categoryService;
     private final ModelMapper modelMapper;
-
 
     public ProductServiceImpl(IProductRepository productRepository, ICategoryService categoryService, ModelMapper modelMapper) {
         this.productRepository = productRepository;
@@ -27,7 +25,6 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDTO getProductById(Integer id) {
-
         log.info("Product product with id {}", id);
         return productRepository.findById(id)
                 .map(product -> modelMapper.map(product, ProductDTO.class))
@@ -36,7 +33,6 @@ public class ProductServiceImpl implements IProductService {
     }
 
     public List<ProductDTO> getAllProducts() {
-
         log.info("Fetching all products");
         List<ProductDTO> listProducts = productRepository.findAll().stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
@@ -47,7 +43,6 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDTO addProduct(ProductDTO productDTO) {
-
         CategoryDTO categoryDTO = categoryService.getCategoryById(productDTO.getCategory().getId());
         productDTO.setCategory(categoryDTO);
         log.info("Adding a new product: {}", productDTO);
@@ -59,7 +54,6 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDTO editProduct(Integer id, ProductDTO productDTO) {
-
         log.info("retrieve product {} to edit with id : {}", productDTO, id);
         getProductById(id);
         Product product = modelMapper.map(productDTO, Product.class);
@@ -71,7 +65,6 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public void deleteProduct(Integer id) {
-
         log.info("Retrieve product to Delete with id {}", id);
         getProductById(id);
         productRepository.deleteById(id);
@@ -80,7 +73,6 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductDTO> searchProductByName(String name) {
-
         log.info("Retrieve product to lookup with name {}", name);
         List<ProductDTO> listProductsByName = productRepository.findByProductName(name).stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
