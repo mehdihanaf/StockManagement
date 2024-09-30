@@ -1,7 +1,7 @@
 package com.stock.services;
 
 import com.stock.model.ProductDTO;
-import com.stock.model.ProductPage;
+import com.stock.pages.ProductPage;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

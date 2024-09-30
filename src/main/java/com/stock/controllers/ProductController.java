@@ -3,7 +3,7 @@ package com.stock.controllers;
 import com.stock.StockManagementConstants;
 import com.stock.api.controller.ProductApi;
 import com.stock.model.ProductDTO;
-import com.stock.model.ProductPage;
+import com.stock.pages.ProductPage;
 import com.stock.services.IProductService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;

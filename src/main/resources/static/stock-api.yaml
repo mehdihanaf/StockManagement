@@ -341,7 +341,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductPage'
+                $ref: '#/components/schemas/ProductPageDTO'
         '400':
           description: Invalid input or parameters
         '500':
@@ -703,7 +703,7 @@ components:
           type: string
           example: "Common Response returned from the server"
 
-    ProductPage:
+    ProductPageDTO:
       type: object
       properties:
         products:

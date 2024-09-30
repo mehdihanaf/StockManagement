@@ -4,7 +4,7 @@ import com.stock.exceptions.TMNotFoundException;
 import com.stock.model.CategoryDTO;
 import com.stock.model.ProductDTO;
 import com.stock.models.Product;
-import com.stock.model.ProductPage;
+import com.stock.pages.ProductPage;
 import com.stock.repository.IProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
