@@ -291,6 +291,62 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
+  /product/filtred:
+    get:
+      summary: Get all filtered products
+      description: Retrieve filtered products with pagination and sorting options.
+      operationId: getAllProductsFiltered
+      parameters:
+        - in: query
+          name: input
+          schema:
+            type: string
+          required: true
+          description: The input to filter products by their name.
+
+        - in: query
+          name: sort
+          schema:
+            type: string
+          required: true
+          description: The field to sort by. Defaults to "id" if set to "undefined".
+
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ asc, desc ]
+          required: true
+          description: The sorting order (ascending or descending). Defaults to "asc" if blank or invalid.
+
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: true
+          description: The page number to retrieve (1-based index).
+
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: The number of items per page.
+
+      responses:
+        '200':
+          description: A paginated list of filtered products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductPage'
+        '400':
+          description: Invalid input or parameters
+        '500':
+          description: Internal server error
+
   /sale/all:
     get:
       tags:
@@ -646,4 +702,20 @@ components:
         details:
           type: string
           example: "Common Response returned from the server"
+
+    ProductPage:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDTO'
+        totalCount:
+          type: integer
+          format: int64
+          description: Total number of products available
+        pageIndex:
+          type: integer
+          format: int64
+          description: The current page index (0-based)
 

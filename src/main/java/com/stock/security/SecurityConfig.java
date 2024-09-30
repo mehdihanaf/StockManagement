@@ -20,8 +20,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Collections;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -69,27 +74,12 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        /*http.csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(requests -> requests
-            .requestMatchers("/api/v1/user/login").permitAll())
-            .httpBasic(withDefaults())
-            .sessionManagement(management -> management
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(new AuthFilter(authService), UsernamePasswordAuthenticationFilter.class);
-        http.httpBasic(AbstractHttpConfigurer::disable);*/
-
-        /*http.authorizeRequests(authorizeRequests -> authorizeRequests.requestMatchers("/api/v1/user/login").permitAll()
-                        .anyRequest()
-                        .authenticated())
-                .httpBasic(withDefaults())
-                .formLogin(withDefaults())
-                .csrf(AbstractHttpConfigurer::disable);
-        return http.build();*/
-
         return http
-                .cors(cors -> cors.disable())
+                .cors( Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -108,21 +98,25 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/js/**",
+        return (web) -> web.ignoring()
+                .requestMatchers("/js/**",
                 "/images/**", "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger-ui/**", "/swagger-ui/**", "/v3/api-docs/**");
     }
 
-    // global
+
+
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("GET", "POST", "PUT",
-                        "DELETE");
-            }
-        };
+    CorsConfigurationSource corsConfigurationSource(){
+        var config = new CorsConfiguration();
+        config.setAllowedOrigins(Collections.singletonList(allowedOrigins));
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowCredentials(true);
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setMaxAge(3600L);
+        var source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
 }

@@ -4,9 +4,12 @@ import com.stock.exceptions.TMNotFoundException;
 import com.stock.model.CategoryDTO;
 import com.stock.model.ProductDTO;
 import com.stock.models.Product;
+import com.stock.model.ProductPage;
 import com.stock.repository.IProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -39,6 +42,15 @@ public class ProductServiceImpl implements IProductService {
                 .toList();
         log.info("Fetched {} products", listProducts.size());
         return listProducts;
+    }
+    @Override
+    public ProductPage findByProductNameStartsWith(String name, Pageable pageable) {
+        Page<Product> productPage = productRepository.searchForProducts( "%"+ name+"%", pageable);
+        Page<ProductDTO> productDtoPage = productPage.map(product -> modelMapper.map(product, ProductDTO.class));
+        ProductPage pPage = new ProductPage();
+        pPage.setProducts(productDtoPage.getContent());
+        pPage.setTotalCount(productPage.getTotalElements());
+        return pPage;
     }
 
     @Override
