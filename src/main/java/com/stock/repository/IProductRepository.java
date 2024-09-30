@@ -14,9 +14,15 @@ public interface IProductRepository extends JpaRepository<Product,Integer> {
 
     List<Product> findByProductName(String name);
 
-    @Query(value = "SELECT p FROM Product p WHERE lower(p.productName) LIKE lower(?1)",
+    @Query(value = "SELECT p FROM Product p WHERE lower(p.productName) LIKE lower(?1) " +
+            "OR lower(p.productCode) LIKE lower(?1) OR CAST(p.quantity AS string) LIKE lower(?1)"
+            + "OR CAST(p.unitBuyPrice AS string) LIKE lower(?1) OR CAST(p.unitSellPrice AS string) LIKE lower(?1)"
+            + "OR CAST(p.buyDate AS string) LIKE lower(?1) OR lower(p.category.name) LIKE lower(?1)",
             countQuery = "SELECT count(*) FROM Product p WHERE lower(p.productName) LIKE lower(?1)"
+            +"OR lower(p.productCode) LIKE lower(?1) OR CAST(p.quantity AS string) LIKE lower(?1)"
+            +"OR CAST(p.unitBuyPrice AS string) LIKE lower(?1) OR CAST(p.unitSellPrice AS string) LIKE lower(?1)"
+            +"OR CAST(p.buyDate AS string) LIKE lower(?1) OR lower(p.category.name) LIKE lower(?1)"
             )
-    Page<Product> searchForProducts(String name, Pageable pageable);
+    Page<Product> searchForProductsByAnyColumn(String name, Pageable pageable);
 
 }

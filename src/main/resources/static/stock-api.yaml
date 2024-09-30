@@ -295,7 +295,7 @@ paths:
     get:
       summary: Get all filtered products
       description: Retrieve filtered products with pagination and sorting options.
-      operationId: getAllProductsFiltered
+      operationId: searchForProductsByAnyColumn
       parameters:
         - in: query
           name: input

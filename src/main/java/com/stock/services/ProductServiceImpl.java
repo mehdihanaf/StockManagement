@@ -44,8 +44,8 @@ public class ProductServiceImpl implements IProductService {
         return listProducts;
     }
     @Override
-    public ProductPage findByProductNameStartsWith(String name, Pageable pageable) {
-        Page<Product> productPage = productRepository.searchForProducts( "%"+ name+"%", pageable);
+    public ProductPage searchForProductsByAnyColumn(String name, Pageable pageable) {
+        Page<Product> productPage = productRepository.searchForProductsByAnyColumn( "%"+ name+"%", pageable);
         Page<ProductDTO> productDtoPage = productPage.map(product -> modelMapper.map(product, ProductDTO.class));
         ProductPage pPage = new ProductPage();
         pPage.setProducts(productDtoPage.getContent());

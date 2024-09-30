@@ -43,28 +43,26 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public ResponseEntity<ProductPage> getAllProductsFiltered(@RequestParam String input,
-                                                                              @RequestParam("sort") String sortField,
-                                                                              @RequestParam String order,
-                                                                              @RequestParam("page") Integer pageNum,
-                                                                              @RequestParam("per_page") Integer limitPerPage
-                                                            ) {
+    public ResponseEntity<ProductPage> searchForProductsByAnyColumn(@RequestParam String input,
+                                                              @RequestParam("sort") String sortField,
+                                                              @RequestParam String order,
+                                                              @RequestParam("page") Integer pageNum,
+                                                              @RequestParam("per_page") Integer limitPerPage
+    ) {
 
-        Sort.Direction direction = StringUtils.isBlank(order) || Objects.equals(order, "asc")? Sort.Direction.ASC: Sort.Direction.DESC;
-        if(Objects.equals(sortField, "undefined")) {
-            sortField = "id";
+        Sort.Direction direction = Objects.equals(order, "asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        if (StringUtils.isBlank(sortField)) {
+            sortField = "buyDate";
         }
         Sort sort = Sort.by(direction, sortField);
         Pageable pageable = PageRequest.of(pageNum, limitPerPage)
                 .withSort(sort);
 
-        ProductPage productPage =   productService.findByProductNameStartsWith(input, pageable);
-//        ProductPage productPage = new ProductPage(allProducts, allProducts.size());
+        ProductPage productPage = productService.searchForProductsByAnyColumn(input, pageable);
         productPage.setPageIndex((long) pageNum);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(productPage)
-                ;
+                .body(productPage);
     }
 
 
@@ -88,7 +86,7 @@ public class ProductController implements ProductApi {
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer id) {
         productService.deleteProduct(id);
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .body("product is deleted");
     }
 

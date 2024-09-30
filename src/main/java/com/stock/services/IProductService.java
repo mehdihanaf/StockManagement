@@ -13,6 +13,6 @@ public interface IProductService {
     ProductDTO editProduct(Integer id, ProductDTO t);
     void deleteProduct(Integer id);
     List<ProductDTO> searchProductByName(String name);
-    ProductPage findByProductNameStartsWith(String name, Pageable pageable);
+    ProductPage searchForProductsByAnyColumn(String name, Pageable pageable);
 
     }
