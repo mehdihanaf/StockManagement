@@ -34,7 +34,7 @@ public class SaleServiceImpl implements ISaleService{
     @Override
     public SaleDTO getSaleById(Integer id) {
 
-        log.info("Product product with id {}", id);
+        log.info("Product  with id {}", id);
         var sale_txt = textUtil.getMessage("sale");
         return saleRepository.findById(id)
                 .map(sale -> modelMapper.map(sale, SaleDTO.class))
@@ -58,7 +58,7 @@ public class SaleServiceImpl implements ISaleService{
         var sale = modelMapper.map(saleDTO, Sale.class);
         var product = productRepository.findById(sale.getProduct().getId());
         if (product.get().getQuantity() < sale.getSaleQuantity()) {
-            throw new CustomResponseException("Insufficient product quantity for sale .");
+            throw new CustomResponseException(textUtil.getMessage("error.empty"));
         }
         var newQuantity = product.get().getQuantity() - sale.getSaleQuantity();
         product.get().setQuantity(newQuantity);
@@ -79,7 +79,7 @@ public class SaleServiceImpl implements ISaleService{
         Optional<Product> product = productRepository.findById(saleDTO.getProduct().getId());
         var newProductQuantity = product.get().getQuantity() - marge;
         if (newProductQuantity < 0) {
-            throw new CustomResponseException("Insufficient product quantity for sale .");
+            throw new CustomResponseException("error.empty");
         }
         product.get().setQuantity(newProductQuantity);
         productRepository.save(product.get());
