@@ -8,6 +8,7 @@ import com.stock.models.Product;
 import com.stock.models.Sale;
 import com.stock.repository.IProductRepository;
 import com.stock.repository.ISaleRepository;
+import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,19 +23,22 @@ public class SaleServiceImpl implements ISaleService{
     private final ISaleRepository saleRepository;
     private final IProductRepository productRepository;
     private final ModelMapper modelMapper;
+    private final TextUtil textUtil;
 
-    public SaleServiceImpl(ISaleRepository saleRepository, IProductRepository productRepository, ModelMapper modelMapper) {
+    public SaleServiceImpl(ISaleRepository saleRepository, IProductRepository productRepository, ModelMapper modelMapper, TextUtil textUtil) {
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
+        this.textUtil = textUtil;
     }
     @Override
     public SaleDTO getSaleById(Integer id) {
 
-        log.info("Product product with id {}", id);
+        log.info("Product  with id {}", id);
+        var sale_txt = textUtil.getMessage("sale");
         return saleRepository.findById(id)
                 .map(sale -> modelMapper.map(sale, SaleDTO.class))
-                .orElseThrow(() -> new TMNotFoundException("Sale not found"));
+                .orElseThrow(() -> new TMNotFoundException(textUtil.getMessage("error.notfound",sale_txt, id)));
     }
     @Override
     public List<SaleDTO> getAllSales() {
@@ -54,7 +58,7 @@ public class SaleServiceImpl implements ISaleService{
         var sale = modelMapper.map(saleDTO, Sale.class);
         var product = productRepository.findById(sale.getProduct().getId());
         if (product.get().getQuantity() < sale.getSaleQuantity()) {
-            throw new CustomResponseException("Insufficient product quantity for sale .");
+            throw new CustomResponseException(textUtil.getMessage("error.empty"));
         }
         var newQuantity = product.get().getQuantity() - sale.getSaleQuantity();
         product.get().setQuantity(newQuantity);
@@ -75,7 +79,7 @@ public class SaleServiceImpl implements ISaleService{
         Optional<Product> product = productRepository.findById(saleDTO.getProduct().getId());
         var newProductQuantity = product.get().getQuantity() - marge;
         if (newProductQuantity < 0) {
-            throw new CustomResponseException("Insufficient product quantity for sale .");
+            throw new CustomResponseException("error.empty");
         }
         product.get().setQuantity(newProductQuantity);
         productRepository.save(product.get());

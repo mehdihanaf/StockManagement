@@ -439,9 +439,9 @@ paths:
         '400':
           description: Insufficient product quantity
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/ErrorResponse'
   /sale/delete/{id}:
     delete:
       tags:

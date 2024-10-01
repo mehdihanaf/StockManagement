@@ -6,6 +6,7 @@ import com.stock.model.ProductDTO;
 import com.stock.models.Product;
 import com.stock.pages.ProductPage;
 import com.stock.repository.IProductRepository;
+import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -19,19 +20,22 @@ public class ProductServiceImpl implements IProductService {
     private final IProductRepository productRepository;
     private final ICategoryService categoryService;
     private final ModelMapper modelMapper;
+    private final TextUtil textUtil;
 
-    public ProductServiceImpl(IProductRepository productRepository, ICategoryService categoryService, ModelMapper modelMapper) {
+    public ProductServiceImpl(IProductRepository productRepository, ICategoryService categoryService, ModelMapper modelMapper, TextUtil textUtil) {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
         this.modelMapper = modelMapper;
+        this.textUtil = textUtil;
     }
 
     @Override
     public ProductDTO getProductById(Integer id) {
         log.info("Product product with id {}", id);
+        var product_txt = textUtil.getMessage("product");
         return productRepository.findById(id)
                 .map(product -> modelMapper.map(product, ProductDTO.class))
-                .orElseThrow(() -> new TMNotFoundException("product not found"));
+                .orElseThrow(() -> new TMNotFoundException(textUtil.getMessage("error.notfound",product_txt, id)));
 
     }
 
