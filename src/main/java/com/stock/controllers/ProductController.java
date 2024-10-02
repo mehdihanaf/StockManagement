@@ -3,12 +3,18 @@ package com.stock.controllers;
 import com.stock.StockManagementConstants;
 import com.stock.api.controller.ProductApi;
 import com.stock.model.ProductDTO;
+import com.stock.pages.ProductPage;
 import com.stock.services.IProductService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(StockManagementConstants.API_VERSION)
@@ -36,6 +42,29 @@ public class ProductController implements ProductApi {
                 .body(listproducts);
     }
 
+    @Override
+    public ResponseEntity<ProductPage> searchForProductsByAnyColumn(@RequestParam String input,
+                                                              @RequestParam("sort") String sortField,
+                                                              @RequestParam String order,
+                                                              @RequestParam("page") Integer pageNum,
+                                                              @RequestParam("per_page") Integer limitPerPage
+    ) {
+
+        Sort.Direction direction = Objects.equals(order, "asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        if (StringUtils.isBlank(sortField)) {
+            sortField = "buyDate";
+        }
+        Sort sort = Sort.by(direction, sortField);
+        Pageable pageable = PageRequest.of(pageNum, limitPerPage)
+                .withSort(sort);
+
+        ProductPage productPage = productService.searchForProductsByAnyColumn(input, pageable);
+        productPage.setPageIndex((long) pageNum);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(productPage);
+    }
+
 
     @Override
     public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
@@ -57,7 +86,7 @@ public class ProductController implements ProductApi {
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer id) {
         productService.deleteProduct(id);
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .body("product is deleted");
     }
 

@@ -5,6 +5,7 @@ import com.stock.model.CategoryDTO;
 import com.stock.models.Category;
 import com.stock.pages.CategoryPage;
 import com.stock.repository.ICategoryRepository;
+import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -18,10 +19,12 @@ public class CategoryServiceImpl implements ICategoryService {
     private static final int MAX_PER_PAGE = 5;
     private final ICategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
+    private final TextUtil textUtil;
 
-    public CategoryServiceImpl(ICategoryRepository categoryRepository, ModelMapper modelMapper) {
+    public CategoryServiceImpl(ICategoryRepository categoryRepository, ModelMapper modelMapper, TextUtil textUtil) {
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
+        this.textUtil = textUtil;
     }
 
 
@@ -29,9 +32,10 @@ public class CategoryServiceImpl implements ICategoryService {
     public CategoryDTO getCategoryById(Integer id) {
 
         log.info("Retrieve Category with id {}", id);
+        String category_txt = textUtil.getMessage("category");
         return categoryRepository.findById(id)
                 .map(category -> modelMapper.map(category, CategoryDTO.class))
-                .orElseThrow(() -> new TMNotFoundException("category not found"));
+                .orElseThrow(() -> new TMNotFoundException(textUtil.getMessage("error.notfound",category_txt ,id)));
     }
 
     @Override

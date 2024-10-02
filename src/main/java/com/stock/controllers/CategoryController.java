@@ -5,6 +5,7 @@ import com.stock.api.controller.CategoryApi;
 import com.stock.model.CategoryDTO;
 import com.stock.pages.CategoryPage;
 import com.stock.services.ICategoryService;
+import com.stock.utils.TextUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 public class CategoryController implements CategoryApi {
 
     private final ICategoryService categoryService;
+    private final TextUtil textUtil;
 
     @Override
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
@@ -63,12 +65,11 @@ public class CategoryController implements CategoryApi {
     @Override
     public ResponseEntity<String> deleteCategory(@PathVariable("id") Integer id) {
 
-        //todo validation
+        String category_txt = textUtil.getMessage("category");
         categoryService.deleteCategory(id);
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body("category is deleted");
+                .body(textUtil.getMessage("delete.validation",category_txt ,id));
     }
 
     @Override

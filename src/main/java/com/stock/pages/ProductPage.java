@@ -3,14 +3,14 @@ package com.stock.pages;
 
 import com.stock.model.ProductDTO;
 import lombok.Data;
-import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 @Data
 public class ProductPage {
 
-    private final Page<ProductDTO> productPage;
+    private List<ProductDTO> products;
+    private long totalCount;
+    private long pageIndex;
 
-    public ProductPage(Page<ProductDTO> productpage) {
-        this.productPage = productpage;
-    }
 }
