@@ -60,3 +60,11 @@ VALUES
     (1028, 'P50505', 'Gaming Keyboard', 'RGB mechanical gaming keyboard', 65, '2024-10-13', 60.00, 100.00, 1005),
     (1029, 'P60606', 'Fitness Tracker', 'Waterproof fitness tracker', 30, '2024-10-14', 30.00, 60.00, 1006),
     (1030, 'P70707', 'Wireless Earbuds', 'Bluetooth wireless earbuds', 100, '2024-10-15', 50.00, 100.00, 1007);
+
+
+   insert into sale(id,description,discount,sale_date,sale_quantity,product_id) values
+   	(1000, 'sale-1',500,'2024-09-20', 5, 1001),
+       (1001, 'sale-2',500, '2024-09-21', 3, 1002),
+       (1002, 'sale-3',500, '2024-09-22', 8, 1003),
+       (1003, 'sale-4',500, '2024-09-23', 2, 1004),
+       (1004, 'sale-5',500, '2024-09-24', 7, 1005);

@@ -6,11 +6,15 @@ import com.stock.model.ProductDTO;
 import com.stock.model.SaleDTO;
 import com.stock.models.Product;
 import com.stock.models.Sale;
+import com.stock.pages.ProductPage;
+import com.stock.pages.SalePage;
 import com.stock.repository.IProductRepository;
 import com.stock.repository.ISaleRepository;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -114,4 +118,17 @@ public class SaleServiceImpl implements ISaleService{
         return listSalesByName;
 
     }
+    @Override
+    public SalePage searchForSalesByAnyColumn(String name, Pageable pageable) {
+        Page<Sale> salePage = saleRepository.searchForSalesByAnyColumn( "%"+ name+"%", pageable);
+        log.info("this is sale page");
+        log.info(String.valueOf(salePage));
+        Page<SaleDTO> saleDtoPage = salePage.map(sale -> modelMapper.map(sale, SaleDTO.class));
+        SalePage sPage = new SalePage();
+        sPage.setSales(saleDtoPage.getContent());
+        sPage.setTotalCount(salePage.getTotalElements());
+
+        return sPage;
+    }
+
 }

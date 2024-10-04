@@ -143,7 +143,8 @@
 							<library>spring-boot</library>
 							<schemaMappings>
 								CategoryPageDTO=com.stock.pages.CategoryPage,
-								ProductPageDTO=com.stock.pages.ProductPage
+								ProductPageDTO=com.stock.pages.ProductPage,
+								SalePageDTO=com.stock.pages.SalePage
 							</schemaMappings>
 							<modelNameSuffix>${swagger.modelNameSuffix}</modelNameSuffix>
 							<generateApis>true</generateApis>

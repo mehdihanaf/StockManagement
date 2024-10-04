@@ -488,6 +488,61 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SaleDTO'
+  /sale/filtred:
+    get:
+      summary: Get all filtered sales
+      description: Retrieve filtered sales with pagination and sorting options.
+      operationId: searchForSalesByAnyColumn
+      parameters:
+        - in: query
+          name: input
+          schema:
+            type: string
+          required: true
+          description: The input to filter sales by their name.
+
+        - in: query
+          name: sort
+          schema:
+            type: string
+          required: true
+          description: The field to sort by. Defaults to "id" if set to "undefined".
+
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ asc, desc ]
+          required: true
+          description: The sorting order (ascending or descending). Defaults to "asc" if blank or invalid.
+
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: true
+          description: The page number to retrieve (1-based index).
+
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: The number of items per page.
+
+      responses:
+        '200':
+          description: A paginated list of filtered sales
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalePageDTO'
+        '400':
+          description: Invalid input or parameters
+        '500':
+          description: Internal server error
   /user/login:
     post:
       tags:
@@ -714,6 +769,22 @@ components:
           type: integer
           format: int64
           description: Total number of products available
+        pageIndex:
+          type: integer
+          format: int64
+          description: The current page index (0-based)
+
+    SalePageDTO:
+      type: object
+      properties:
+        sales:
+          type: array
+          items:
+            $ref: '#/components/schemas/SaleDTO'
+        totalCount:
+          type: integer
+          format: int64
+          description: Total number of sales available
         pageIndex:
           type: integer
           format: int64
