@@ -90,7 +90,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<ProductDTO> searchProductByName(String name) {
         log.info("Retrieve product to lookup with name {}", name);
-        List<ProductDTO> listProductsByName = productRepository.findByProductName(name).stream()
+        List<ProductDTO> listProductsByName = productRepository.searchProductByProductName("%" +name+ "%").stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
         log.info("list of  Products {} with name {}", listProductsByName, name);
