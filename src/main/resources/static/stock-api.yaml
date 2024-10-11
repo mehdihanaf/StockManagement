@@ -28,28 +28,62 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CategoryDTO'
-  /category:
+  /category/filtred:
     get:
-      tags:
-        - Category
-      operationId: CategoriesPerPage
-      summary: Get Categories by page number
-      #x-spring-paginated: true
+      summary: Get all filtered categories
+      description: Retrieve filtered categories with pagination and sorting options.
+      operationId: searchForCategoriesByName
       parameters:
         - in: query
-          name: page
-          description: number of page
+          name: input
+          schema:
+            type: string
           required: true
+          description: The input to filter categories by their name.
+
+        - in: query
+          name: sort
+          schema:
+            type: string
+          required: true
+          description: The field to sort by. Defaults to "id" if set to "undefined".
+
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ asc, desc ]
+          required: true
+          description: The sorting order (ascending or descending). Defaults to "asc" if blank or invalid.
+
+        - in: query
+          name: page
           schema:
             type: integer
-            example: '1'
+            default: 1
+          required: true
+          description: The page number to retrieve (1-based index).
+
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: The number of items per page.
+
       responses:
-        'default':
-          description: A list of categories
+        '200':
+          description: A paginated list of filtered categories
           content:
             application/json:
               schema:
-                type: CategoryPageDTO
+                $ref: '#/components/schemas/CategoryPageDTO'
+        '400':
+          description: Invalid input or parameters
+        '500':
+          description: Internal server error
+
   /category/{id}:
     get:
       tags:

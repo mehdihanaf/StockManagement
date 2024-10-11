@@ -4,14 +4,20 @@ import com.stock.StockManagementConstants;
 import com.stock.api.controller.CategoryApi;
 import com.stock.model.CategoryDTO;
 import com.stock.pages.CategoryPage;
+import com.stock.pages.ProductPage;
 import com.stock.services.ICategoryService;
 import com.stock.utils.TextUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(StockManagementConstants.API_VERSION)
@@ -30,10 +36,7 @@ public class CategoryController implements CategoryApi {
                 .body(categories);
     }
 
-    @Override
-    public ResponseEntity<CategoryPage> categoriesPerPage(@RequestParam Integer page) {
-        return ResponseEntity.ok(categoryService.getCategoriesByPage(--page));
-    }
+
 
     @Override
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable("id") Integer id) {
@@ -81,8 +84,31 @@ public class CategoryController implements CategoryApi {
                 .body(categories);
     }
 
+    @Override
+    public ResponseEntity<CategoryPage> searchForCategoriesByName(@RequestParam String input,
+                                                                    @RequestParam("sort") String sortField,
+                                                                    @RequestParam String order,
+                                                                    @RequestParam("page") Integer pageNum,
+                                                                    @RequestParam("per_page") Integer limitPerPage
+    ) {
+
+        Sort.Direction direction = Objects.equals(order, "asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        if (StringUtils.isBlank(sortField)) {
+            sortField = "name";
+        }
+        Sort sort = Sort.by(direction, sortField);
+        Pageable pageable = PageRequest.of(pageNum, limitPerPage)
+                .withSort(sort);
+
+        CategoryPage categoryPage = categoryService.searchForCategoriesByName(input, pageable);
+        categoryPage.setPageIndex((long) pageNum);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categoryPage);
+    }
+
     /*
-     //TODO...
+
      makatreturnish list
     @GetMapping("/categories/page/{id}")
     public ResponseEntity<List<CategoryDTO>> getCategoriesByPage(@PathVariable("id") int id) {

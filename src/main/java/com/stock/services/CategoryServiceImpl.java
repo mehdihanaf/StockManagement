@@ -2,13 +2,18 @@ package com.stock.services;
 
 import com.stock.exceptions.TMNotFoundException;
 import com.stock.model.CategoryDTO;
+import com.stock.model.SaleDTO;
 import com.stock.models.Category;
+import com.stock.models.Sale;
 import com.stock.pages.CategoryPage;
+import com.stock.pages.SalePage;
 import com.stock.repository.ICategoryRepository;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -91,11 +96,17 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public CategoryPage getCategoriesByPage(int page) {
+    public CategoryPage searchForCategoriesByName(String name, Pageable pageable) {
+        Page<Category> categoryPage = categoryRepository.searchForCategoriesByName( "%"+ name+"%", pageable);
+        log.info("this is category page");
+        log.info(String.valueOf(categoryPage));
+        Page<CategoryDTO> categoryDtoPage = categoryPage.map(category -> modelMapper.map(category, CategoryDTO.class));
+        CategoryPage cPage = new CategoryPage();
+        cPage.setCategories(categoryDtoPage.getContent());
+        cPage.setTotalCount(categoryPage.getTotalElements());
 
-        log.info("Retrieve number of page of Category with page {}", page);
-        var categoryPage = categoryRepository.findAll(PageRequest.of(page, MAX_PER_PAGE));
-        log.info("page of Categories {} in page {}",categoryPage, page);
-        return new CategoryPage(categoryPage.map(category -> modelMapper.map(category, CategoryDTO.class)));
+        return cPage;
     }
+
+
 }
