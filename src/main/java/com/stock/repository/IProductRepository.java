@@ -14,8 +14,8 @@ import java.util.List;
 public interface IProductRepository extends JpaRepository<Product,Integer> {
 
 
-    @Query(value = "SELECT p FROM Product p WHERE lower(p.productName) LIKE lower(:name)")
-    List<Product> searchProductByProductName(@Param("name")String name);
+    @Query(value = "SELECT p FROM Product p WHERE lower(p.productName) LIKE lower(?1)")
+    List<Product> searchProductByProductName(String name);
 
     @Query(value = "SELECT p FROM Product p WHERE lower(p.productName) LIKE lower(?1) " +
             "OR lower(p.productCode) LIKE lower(?1) OR CAST(p.quantity AS string) LIKE lower(?1)"

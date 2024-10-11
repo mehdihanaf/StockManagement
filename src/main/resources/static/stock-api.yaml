@@ -657,10 +657,8 @@ components:
         product:
           $ref: '#/components/schemas/ProductDTO'
       required:
-        - description
-        - saleDate
         - saleQuantity
-        - discount
+        - product
     UserDTO:
       type: object
       properties:

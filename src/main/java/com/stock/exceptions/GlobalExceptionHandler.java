@@ -1,6 +1,7 @@
 package com.stock.exceptions;
 
 import com.stock.model.ErrorResponse;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

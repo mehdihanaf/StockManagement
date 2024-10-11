@@ -83,7 +83,7 @@ public class SaleServiceImpl implements ISaleService{
         Optional<Product> product = productRepository.findById(saleDTO.getProduct().getId());
         var newProductQuantity = product.get().getQuantity() - marge;
         if (newProductQuantity < 0) {
-            throw new CustomResponseException("error.empty");
+            throw new CustomResponseException(textUtil.getMessage("error.empty"));
         }
         product.get().setQuantity(newProductQuantity);
         productRepository.save(product.get());
