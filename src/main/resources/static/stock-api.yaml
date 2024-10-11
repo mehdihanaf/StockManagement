@@ -787,4 +787,19 @@ components:
           type: integer
           format: int64
           description: The current page index (0-based)
+    CategoryPageDTO:
+      type: object
+      properties:
+        sales:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryDTO'
+        totalCount:
+          type: integer
+          format: int64
+          description: Total number of categories available
+        pageIndex:
+          type: integer
+          format: int64
+          description: The current page index (0-based)
 

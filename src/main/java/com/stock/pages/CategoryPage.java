@@ -2,14 +2,14 @@ package com.stock.pages;
 
 import com.stock.model.CategoryDTO;
 import lombok.Data;
-import org.springframework.data.domain.Page;
+
+
+import java.util.List;
 
 @Data
 public class CategoryPage {
 
-    private final Page<CategoryDTO> categoryPage;
-
-    public CategoryPage(Page<CategoryDTO> categoryPage) {
-        this.categoryPage = categoryPage;
-    }
+    private List<CategoryDTO> categories;
+    private long totalCount;
+    private long pageIndex;
 }
