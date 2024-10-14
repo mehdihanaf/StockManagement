@@ -1,18 +1,16 @@
 package com.stock.services;
 
+import com.stock.exceptions.CustomResponseException;
 import com.stock.exceptions.TMNotFoundException;
 import com.stock.model.CategoryDTO;
-import com.stock.model.SaleDTO;
 import com.stock.models.Category;
-import com.stock.models.Sale;
 import com.stock.pages.CategoryPage;
-import com.stock.pages.SalePage;
 import com.stock.repository.ICategoryRepository;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -81,8 +79,13 @@ public class CategoryServiceImpl implements ICategoryService {
 
         log.info("Retrieve Category to Delete with id {}", id);
         getCategoryById(id);
-        categoryRepository.deleteById(id);
-        log.info(" Category Deleted with id {}", id);
+        try {
+            categoryRepository.deleteById(id);
+            log.info(" Category Deleted with id {}", id);
+        }catch(DataIntegrityViolationException ex){
+            log.info("category deletion exception ");
+            throw new CustomResponseException(textUtil.getMessage("error.category.assosciate"));
+        }
     }
 
     public List<CategoryDTO> searchCategoryByName(String name) {
