@@ -88,6 +88,18 @@ public class CategoryServiceImpl implements ICategoryService {
         }
     }
 
+    @Override
+    public void deleteCategoriesById(List<Integer> idList) {
+        try {
+            categoryRepository.deleteAllById(idList);
+        }catch(DataIntegrityViolationException ex){
+            log.info("category deletion exception ");
+            throw new CustomResponseException(textUtil.getMessage("error.category.assosciate"));
+        }
+
+    }
+
+
     public List<CategoryDTO> searchCategoryByName(String name) {
 
         log.info("Retrieve Category to lookup with name {}", name);

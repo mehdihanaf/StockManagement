@@ -76,6 +76,15 @@ public class CategoryController implements CategoryApi {
     }
 
     @Override
+    public ResponseEntity<String> deleteCategoriesById(List<Integer> idList) {
+        String category_txt = textUtil.getMessage("categories");
+         categoryService.deleteCategoriesById(idList);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(textUtil.getMessage("deleteall.validation",category_txt));
+    }
+
+    @Override
     public ResponseEntity<List<CategoryDTO>> getCategoriesByName(@RequestParam String name) {
 
         List<CategoryDTO> categories = categoryService.searchCategoryByName(name);
@@ -106,6 +115,9 @@ public class CategoryController implements CategoryApi {
                 .status(HttpStatus.OK)
                 .body(categoryPage);
     }
+
+
+
 
     /*
 

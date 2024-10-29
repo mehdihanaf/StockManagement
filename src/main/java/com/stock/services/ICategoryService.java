@@ -21,6 +21,8 @@ public interface ICategoryService {
 
     void deleteCategory(Integer id);
 
+    void deleteCategoriesById(List<Integer> idList);
+
     List<CategoryDTO> searchCategoryByName(String name);
 
     CategoryPage searchForCategoriesByName(String name, Pageable pageable);

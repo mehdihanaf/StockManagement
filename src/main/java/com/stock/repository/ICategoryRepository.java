@@ -21,4 +21,7 @@ public interface ICategoryRepository extends JpaRepository<Category,Integer> {
     )
     Page<Category> searchForCategoriesByName(String name, Pageable pageable);
 
+
+
+
 }

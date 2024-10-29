@@ -179,6 +179,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /category/deletebyids:
+    delete:
+      tags:
+        - Category
+      operationId: deleteCategoriesById
+      summary: Delete list of Category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+      responses:
+        '200':
+          description: Categories deleted
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Categories deleted successfully."
+        '400':
+          description: categories has products and cannot be deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /category/search:
     get:
       tags:
