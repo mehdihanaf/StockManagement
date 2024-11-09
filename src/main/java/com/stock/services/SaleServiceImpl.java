@@ -13,6 +13,7 @@ import com.stock.repository.ISaleRepository;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -105,6 +106,19 @@ public class SaleServiceImpl implements ISaleService{
         productRepository.save(modelMapper.map(productDTO, Product.class));
         saleRepository.deleteById(id);
         log.info(" Sale Deleted with id {}", id);
+    }
+
+    @Override
+    public void deleteSalesById(List<Integer> idList) {
+
+        try {
+            idList.forEach(this::deleteSale);
+        }catch(DataIntegrityViolationException ex){
+            log.info("category deletion exception ");
+            throw new CustomResponseException(textUtil.getMessage("error.sale.assosciate"));
+        }
+
+
     }
 
     @Override

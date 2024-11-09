@@ -1,5 +1,6 @@
 package com.stock.services;
 
+import com.stock.exceptions.CustomResponseException;
 import com.stock.exceptions.TMNotFoundException;
 import com.stock.model.CategoryDTO;
 import com.stock.model.ProductDTO;
@@ -9,6 +10,7 @@ import com.stock.repository.IProductRepository;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -85,6 +87,19 @@ public class ProductServiceImpl implements IProductService {
         getProductById(id);
         productRepository.deleteById(id);
         log.info(" product Deleted with id {}", id);
+    }
+
+    @Override
+    public void deleteProductsById(List<Integer> idList) {
+
+        try {
+            productRepository.deleteAllById(idList);
+        }catch(DataIntegrityViolationException ex){
+            log.info("category deletion exception ");
+            throw new CustomResponseException(textUtil.getMessage("error.product.assosciate"));
+        }
+
+
     }
 
     @Override

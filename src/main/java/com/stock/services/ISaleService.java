@@ -20,6 +20,8 @@ public interface ISaleService {
 
     void deleteSale(Integer id);
 
+    void deleteSalesById(List<Integer> idList);
+
     //SalePage getByPage(int page);
 
     List<SaleDTO> searchSale(String name);

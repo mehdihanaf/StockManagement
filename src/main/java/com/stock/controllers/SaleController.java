@@ -5,6 +5,8 @@ import com.stock.api.controller.SaleApi;
 import com.stock.model.SaleDTO;
 import com.stock.pages.SalePage;
 import com.stock.services.ISaleService;
+import com.stock.utils.TextUtil;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,13 +19,12 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping(StockManagementConstants.API_VERSION)
+@RequiredArgsConstructor
 public class SaleController implements SaleApi {
 
     private final ISaleService saleService;
+    private final TextUtil textUtil;
 
-    public SaleController(ISaleService saleService) {
-        this.saleService = saleService;
-    }
 
     @Override
     public ResponseEntity<SaleDTO> getSaleById(@PathVariable("id") Integer id) {
@@ -77,6 +78,15 @@ public class SaleController implements SaleApi {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body("Sale is deleted");
+    }
+
+    @Override
+    public ResponseEntity<String> deleteSalesById(List<Integer> idList) {
+        String sale_txt = textUtil.getMessage("sales");
+        saleService.deleteSalesById(idList);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(textUtil.getMessage("deleteall.validation",sale_txt));
     }
 
     @Override

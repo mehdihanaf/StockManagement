@@ -12,6 +12,8 @@ public interface IProductService {
     ProductDTO addProduct(ProductDTO t);
     ProductDTO editProduct(Integer id, ProductDTO t);
     void deleteProduct(Integer id);
+
+    void deleteProductsById(List<Integer> idList);
     List<ProductDTO> searchProductByName(String name);
     ProductPage searchForProductsByAnyColumn(String name, Pageable pageable);
 

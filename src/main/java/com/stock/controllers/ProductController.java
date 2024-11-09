@@ -5,6 +5,8 @@ import com.stock.api.controller.ProductApi;
 import com.stock.model.ProductDTO;
 import com.stock.pages.ProductPage;
 import com.stock.services.IProductService;
+import com.stock.utils.TextUtil;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +20,12 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping(StockManagementConstants.API_VERSION)
+@RequiredArgsConstructor
 public class ProductController implements ProductApi {
 
     private final IProductService productService;
+    private final TextUtil textUtil;
 
-    public ProductController(IProductService productService) {
-        this.productService = productService;
-    }
 
     @Override
     public ResponseEntity<ProductDTO> getProductById(@PathVariable("id") Integer id) {
@@ -90,6 +91,14 @@ public class ProductController implements ProductApi {
                 .body("product is deleted");
     }
 
+    @Override
+    public ResponseEntity<String> deleteProductsById(List<Integer> idList) {
+        String product_txt = textUtil.getMessage("products");
+        productService.deleteProductsById(idList);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(textUtil.getMessage("deleteall.validation",product_txt));
+    }
 
     @Override
     public ResponseEntity<List<ProductDTO>> getProductsByName(@RequestParam String name) {
