@@ -10,14 +10,18 @@ import com.stock.pages.ProductPage;
 import com.stock.pages.SalePage;
 import com.stock.repository.IProductRepository;
 import com.stock.repository.ISaleRepository;
+import com.stock.utils.SaleReportGenerator;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jasperreports.engine.JRException;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,11 +34,18 @@ public class SaleServiceImpl implements ISaleService{
     private final ModelMapper modelMapper;
     private final TextUtil textUtil;
 
-    public SaleServiceImpl(ISaleRepository saleRepository, IProductRepository productRepository, ModelMapper modelMapper, TextUtil textUtil) {
+    private final SaleReportGenerator saleReportGenerator;
+
+    public SaleServiceImpl(ISaleRepository saleRepository,
+                           IProductRepository productRepository,
+                           ModelMapper modelMapper,
+                           TextUtil textUtil,
+                           SaleReportGenerator saleReportGenerator) {
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
         this.textUtil = textUtil;
+        this.saleReportGenerator = saleReportGenerator;
     }
     @Override
     public SaleDTO getSaleById(Integer id) {
@@ -143,6 +154,11 @@ public class SaleServiceImpl implements ISaleService{
         sPage.setTotalCount(salePage.getTotalElements());
 
         return sPage;
+    }
+
+    @Override
+    public Resource exportPdf() throws JRException, FileNotFoundException {
+        return saleReportGenerator.exportToPdf(saleRepository.findAll());
     }
 
 }

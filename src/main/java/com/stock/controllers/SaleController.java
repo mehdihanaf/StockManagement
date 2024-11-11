@@ -7,15 +7,20 @@ import com.stock.pages.SalePage;
 import com.stock.services.ISaleService;
 import com.stock.utils.TextUtil;
 import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.http.*;
 
 @RestController
 @RequestMapping(StockManagementConstants.API_VERSION)
@@ -67,6 +72,17 @@ public class SaleController implements SaleApi {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(saleDTO1);
+    }
+
+    @Override
+    public ResponseEntity<Resource> exportPdfSales() throws JRException, FileNotFoundException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("saleReport", "salesReport.pdf");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .headers(headers)
+                .body(saleService.exportPdf());
     }
 
     @Override
@@ -122,6 +138,7 @@ public class SaleController implements SaleApi {
                 .status(HttpStatus.OK)
                 .body(salePage);
     }
+
 
 
 }
