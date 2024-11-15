@@ -659,7 +659,7 @@ paths:
           description: Invalid input or parameters
         '500':
           description: Internal server error
-  /sale/export-pdf:
+  /sale/exportpdf:
     get:
       tags:
         - Sale Report
@@ -669,7 +669,7 @@ paths:
         '200':
           description: "Binary data response"
           content:
-            application/octet-stream:
+            application/pdf:
               schema:
                 type: string
                 format: binary

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.http.*;
@@ -75,6 +76,31 @@ public class SaleController implements SaleApi {
     }
 
     @Override
+    public ResponseEntity<Resource> exportPdfSales()  {
+
+
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=sales_report.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+
+        try {
+           Resource report = saleService.exportPdf();
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(report.contentLength())
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(report);
+        } catch (JRException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+  /*  @Override
     public ResponseEntity<Resource> exportPdfSales() throws JRException, FileNotFoundException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
@@ -83,7 +109,7 @@ public class SaleController implements SaleApi {
                 .status(HttpStatus.OK)
                 .headers(headers)
                 .body(saleService.exportPdf());
-    }
+    }*/
 
     @Override
     public ResponseEntity<String> deleteSale(@PathVariable("id") Integer id) {
