@@ -23,23 +23,7 @@ import java.util.Map;
 public class SaleReportGenerator {
 
 
-    /*String templatePath = "C:/Users/melhanaf/OneDrive - NTT DATA EMEAL/Documentos/saleReport.jrxml";
 
-    public Resource exportToPdf(List<Sale> list) throws JRException, FileNotFoundException {
-
-        JasperReport jasperReport = JasperCompileManager.compileReport(templatePath);
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("salesData", "Sales Report");
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-        ByteArrayResource resource = new ByteArrayResource(outputStream.toByteArray());
-
-
-
-        return resource;
-    }*/
 
     public Resource exportToPdf(List<Sale> list) throws JRException, FileNotFoundException {
         byte[] pdfBytes = JasperExportManager.exportReportToPdf(getReport(list));

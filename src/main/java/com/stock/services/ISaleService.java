@@ -31,5 +31,5 @@ public interface ISaleService {
 
     SalePage searchForSalesByAnyColumn(String name, Pageable pageable);
 
-    Resource exportPdf() throws JRException, FileNotFoundException;
+    Resource exportPdf(Integer id) throws JRException, FileNotFoundException;
 }

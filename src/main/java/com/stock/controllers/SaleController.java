@@ -76,16 +76,29 @@ public class SaleController implements SaleApi {
     }
 
     @Override
-    public ResponseEntity<Resource> exportPdfSales()  {
-
-
-
+    public ResponseEntity<Resource> exportPdfSales(Integer id) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=sales_report.pdf");
         headers.setContentType(MediaType.APPLICATION_PDF);
+        try {
+            Resource report = saleService.exportPdf(id);
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(report.contentLength())
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(report);
+        } catch (JRException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    /*@Override
+    public ResponseEntity<Resource> exportPdfSales()  {
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=sales_report.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
         try {
            Resource report = saleService.exportPdf();
             return ResponseEntity.ok()
@@ -96,20 +109,8 @@ public class SaleController implements SaleApi {
         } catch (JRException | IOException e) {
             throw new RuntimeException(e);
         }
-
-
-    }
-
-  /*  @Override
-    public ResponseEntity<Resource> exportPdfSales() throws JRException, FileNotFoundException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("saleReport", "salesReport.pdf");
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .headers(headers)
-                .body(saleService.exportPdf());
     }*/
+
 
     @Override
     public ResponseEntity<String> deleteSale(@PathVariable("id") Integer id) {

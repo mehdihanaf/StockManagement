@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -157,8 +158,12 @@ public class SaleServiceImpl implements ISaleService{
     }
 
     @Override
-    public Resource exportPdf() throws JRException, FileNotFoundException {
-        return saleReportGenerator.exportToPdf(saleRepository.findAll());
+    public Resource exportPdf(Integer id) throws JRException, FileNotFoundException {
+        var sale_txt = textUtil.getMessage("sale");
+        List<Sale> listSales = new ArrayList<>();
+             listSales.add(saleRepository.findById(id)
+                     .orElseThrow(() -> new TMNotFoundException(textUtil.getMessage("error.notfound",sale_txt, id))));
+        return saleReportGenerator.exportToPdf(listSales);
     }
 
 }
