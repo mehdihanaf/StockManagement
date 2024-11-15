@@ -49,8 +49,8 @@ public class SaleReportGenerator {
 
     private JasperPrint getReport(List<Sale> list) throws FileNotFoundException, JRException {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("salesData", new JRBeanCollectionDataSource(list));
-
+        params.put("saleData", new JRBeanCollectionDataSource(list));
+        System.out.println("Data: " + list);
         JasperPrint report = JasperFillManager.fillReport(JasperCompileManager.compileReport(
                 ResourceUtils.getFile("classpath:saleReport.jrxml")
                         .getAbsolutePath()), params, new JREmptyDataSource());
