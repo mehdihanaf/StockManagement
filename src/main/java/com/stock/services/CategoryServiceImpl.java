@@ -1,25 +1,21 @@
 package com.stock.services;
 
-import com.opencsv.CSVWriter;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.stock.exceptions.CustomResponseException;
 import com.stock.exceptions.TMNotFoundException;
 import com.stock.model.CategoryDTO;
 import com.stock.models.Category;
 import com.stock.pages.CategoryPage;
 import com.stock.repository.ICategoryRepository;
+import com.stock.utils.CsvUtil;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
 import java.util.List;
 
 @Service
@@ -132,22 +128,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
     public Resource export(String name, Pageable pageable){
         CategoryPage categoryPage = searchForCategoriesByName(name, pageable);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-
-        try {
-
-            StatefulBeanToCsv<CategoryDTO> beanToCsv  = new StatefulBeanToCsvBuilder<CategoryDTO>(writer)
-                    .withQuotechar(CSVWriter.DEFAULT_QUOTE_CHARACTER)
-                    .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
-                    .build();
-
-            beanToCsv.write(categoryPage.getCategories());
-            writer.flush();
-            return new ByteArrayResource(outputStream.toByteArray());
-        }catch (Exception e){
-            throw new RuntimeException("Exception while Exporting csv file");
-        }
+        return CsvUtil.export(categoryPage.getCategories());
     }
 
 
