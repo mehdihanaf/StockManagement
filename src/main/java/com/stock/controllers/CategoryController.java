@@ -82,13 +82,7 @@ public class CategoryController implements CategoryApi {
         @NotNull @Min(1)  @Valid @RequestParam(value = "per_page", required = true) Integer limitPerPage
     ) {
 
-        Sort.Direction direction = Objects.equals(order, "asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        if (StringUtils.isBlank(sortField)) {
-            sortField = "name";
-        }
-        Sort sort = Sort.by(direction, sortField);
-        Pageable pageable = PageRequest.of(pageNum, limitPerPage)
-                .withSort(sort);
+        Pageable pageable = getPageable(sortField, "name", order, pageNum, limitPerPage);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String filename = "categories" + LocalDateTime.now().format(formatter) + ".csv";
         Resource resource = categoryServiceImpl.export(input, pageable);
@@ -98,10 +92,20 @@ public class CategoryController implements CategoryApi {
         headers.add(HttpHeaders.CONTENT_TYPE, "text/csv");
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+filename+"\"");
 
-
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(resource);
+    }
+
+    private static Pageable getPageable(String sortField, String defaultSortField, String order, Integer pageNum, Integer limitPerPage) {
+        Sort.Direction direction = Objects.equals(order, "asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        if (StringUtils.isBlank(sortField)) {
+            sortField = defaultSortField;
+        }
+        Sort sort = Sort.by(direction, sortField);
+        Pageable pageable = PageRequest.of(pageNum, limitPerPage)
+                .withSort(sort);
+        return pageable;
     }
 
     @Override
@@ -140,13 +144,7 @@ public class CategoryController implements CategoryApi {
                                                                     @RequestParam("per_page") Integer limitPerPage
     ) {
 
-        Sort.Direction direction = Objects.equals(order, "asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        if (StringUtils.isBlank(sortField)) {
-            sortField = "name";
-        }
-        Sort sort = Sort.by(direction, sortField);
-        Pageable pageable = PageRequest.of(pageNum, limitPerPage)
-                .withSort(sort);
+        Pageable pageable = getPageable(sortField, "name", order, pageNum, limitPerPage);
 
         CategoryPage categoryPage = categoryService.searchForCategoriesByName(input, pageable);
         categoryPage.setPageIndex((long) pageNum);
