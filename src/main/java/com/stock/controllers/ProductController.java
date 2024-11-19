@@ -5,16 +5,21 @@ import com.stock.api.controller.ProductApi;
 import com.stock.model.ProductDTO;
 import com.stock.pages.ProductPage;
 import com.stock.services.IProductService;
+import com.stock.utils.PagingUtil;
 import com.stock.utils.TextUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,13 +56,7 @@ public class ProductController implements ProductApi {
                                                               @RequestParam("per_page") Integer limitPerPage
     ) {
 
-        Sort.Direction direction = Objects.equals(order, "asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        if (StringUtils.isBlank(sortField)) {
-            sortField = "buyDate";
-        }
-        Sort sort = Sort.by(direction, sortField);
-        Pageable pageable = PageRequest.of(pageNum, limitPerPage)
-                .withSort(sort);
+        Pageable pageable = PagingUtil.getPageable(sortField, "buyDate", order, pageNum, limitPerPage);
 
         ProductPage productPage = productService.searchForProductsByAnyColumn(input, pageable);
         productPage.setPageIndex((long) pageNum);
@@ -82,6 +81,24 @@ public class ProductController implements ProductApi {
                 .status(HttpStatus.CREATED)
                 .body(productDTO1);
     }
+
+    @Override
+    public ResponseEntity<Resource> exportProductsAsCSVFile(String input, String sortField, String order, Integer pageNum, Integer limitPerPage) {
+        Pageable pageable = PagingUtil.getPageable(sortField, "buyDate", order, pageNum, limitPerPage);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String filename = "products" + LocalDateTime.now().format(formatter) + ".csv";
+        Resource resource = productService.export(input, pageable);
+
+        // Prepare response headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "text/csv");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+filename+"\"");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }
+
 
     @Override
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer id) {

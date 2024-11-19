@@ -10,6 +10,7 @@ import com.stock.pages.ProductPage;
 import com.stock.pages.SalePage;
 import com.stock.repository.IProductRepository;
 import com.stock.repository.ISaleRepository;
+import com.stock.utils.CsvUtil;
 import com.stock.utils.SaleReportGenerator;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -164,6 +165,12 @@ public class SaleServiceImpl implements ISaleService{
              listSales.add(saleRepository.findById(id)
                      .orElseThrow(() -> new TMNotFoundException(textUtil.getMessage("error.notfound",sale_txt, id))));
         return saleReportGenerator.exportToPdf(listSales);
+    }
+
+    @Override
+    public Resource export(String name, Pageable pageable){
+        SalePage salePage = searchForSalesByAnyColumn(name, pageable);
+        return CsvUtil.export(salePage.getSales());
     }
 
 }

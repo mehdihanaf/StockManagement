@@ -6,6 +6,7 @@ import com.stock.model.CategoryDTO;
 import com.stock.pages.CategoryPage;
 import com.stock.services.CategoryServiceImpl;
 import com.stock.services.ICategoryService;
+import com.stock.utils.PagingUtil;
 import com.stock.utils.TextUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -82,7 +83,7 @@ public class CategoryController implements CategoryApi {
         @NotNull @Min(1)  @Valid @RequestParam(value = "per_page", required = true) Integer limitPerPage
     ) {
 
-        Pageable pageable = getPageable(sortField, "name", order, pageNum, limitPerPage);
+        Pageable pageable = PagingUtil.getPageable(sortField, "name", order, pageNum, limitPerPage);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String filename = "categories" + LocalDateTime.now().format(formatter) + ".csv";
         Resource resource = categoryServiceImpl.export(input, pageable);
@@ -97,16 +98,6 @@ public class CategoryController implements CategoryApi {
                 .body(resource);
     }
 
-    private static Pageable getPageable(String sortField, String defaultSortField, String order, Integer pageNum, Integer limitPerPage) {
-        Sort.Direction direction = Objects.equals(order, "asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        if (StringUtils.isBlank(sortField)) {
-            sortField = defaultSortField;
-        }
-        Sort sort = Sort.by(direction, sortField);
-        Pageable pageable = PageRequest.of(pageNum, limitPerPage)
-                .withSort(sort);
-        return pageable;
-    }
 
     @Override
     public ResponseEntity<String> deleteCategory(@PathVariable("id") Integer id) {
@@ -144,7 +135,7 @@ public class CategoryController implements CategoryApi {
                                                                     @RequestParam("per_page") Integer limitPerPage
     ) {
 
-        Pageable pageable = getPageable(sortField, "name", order, pageNum, limitPerPage);
+        Pageable pageable = PagingUtil.getPageable(sortField, "name", order, pageNum, limitPerPage);
 
         CategoryPage categoryPage = categoryService.searchForCategoriesByName(input, pageable);
         categoryPage.setPageIndex((long) pageNum);

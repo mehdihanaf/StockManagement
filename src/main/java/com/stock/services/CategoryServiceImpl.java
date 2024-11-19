@@ -126,6 +126,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return cPage;
     }
 
+    @Override
     public Resource export(String name, Pageable pageable){
         CategoryPage categoryPage = searchForCategoriesByName(name, pageable);
         return CsvUtil.export(categoryPage.getCategories());

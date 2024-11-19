@@ -5,6 +5,7 @@ import com.stock.api.controller.SaleApi;
 import com.stock.model.SaleDTO;
 import com.stock.pages.SalePage;
 import com.stock.services.ISaleService;
+import com.stock.utils.PagingUtil;
 import com.stock.utils.TextUtil;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.http.*;
@@ -93,23 +96,22 @@ public class SaleController implements SaleApi {
         }
     }
 
-    /*@Override
-    public ResponseEntity<Resource> exportPdfSales()  {
+    @Override
+    public ResponseEntity<Resource> exportSalesAsCSVFile(String input, String sortField, String order, Integer pageNum, Integer limitPerPage) {
+        Pageable pageable = PagingUtil.getPageable(sortField, "saleDate", order, pageNum, limitPerPage);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String filename = "Sales" + LocalDateTime.now().format(formatter) + ".csv";
+        Resource resource = saleService.export(input, pageable);
 
+        // Prepare response headers
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=sales_report.pdf");
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        try {
-           Resource report = saleService.exportPdf();
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .contentLength(report.contentLength())
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(report);
-        } catch (JRException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
+        headers.add(HttpHeaders.CONTENT_TYPE, "text/csv");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+filename+"\"");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }
 
 
     @Override
@@ -149,13 +151,8 @@ public class SaleController implements SaleApi {
                                                               @RequestParam("per_page") Integer limitPerPage
     ) {
 
-        Sort.Direction direction = Objects.equals(order, "asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        if (StringUtils.isBlank(sortField)) {
-            sortField = "saleDate";
-        }
-        Sort sort = Sort.by(direction, sortField);
-        Pageable pageable = PageRequest.of(pageNum, limitPerPage)
-                .withSort(sort);
+        Pageable pageable = PagingUtil.getPageable(sortField, "saleDate", order, pageNum, limitPerPage);
+
 
         SalePage salePage = saleService.searchForSalesByAnyColumn(input, pageable);
         salePage.setPageIndex((long) pageNum);

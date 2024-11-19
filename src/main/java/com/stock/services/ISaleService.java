@@ -12,14 +12,13 @@ import java.util.List;
 public interface ISaleService {
 
 
-
     SaleDTO getSaleById(Integer id);
 
     List<SaleDTO> getAllSales();
 
     SaleDTO addSale(SaleDTO saleDTO);
 
-    SaleDTO editSale( Integer id, SaleDTO saleDTO);
+    SaleDTO editSale(Integer id, SaleDTO saleDTO);
 
     void deleteSale(Integer id);
 
@@ -32,4 +31,7 @@ public interface ISaleService {
     SalePage searchForSalesByAnyColumn(String name, Pageable pageable);
 
     Resource exportPdf(Integer id) throws JRException, FileNotFoundException;
+
+    Resource export(String name, Pageable pageable);
+
 }

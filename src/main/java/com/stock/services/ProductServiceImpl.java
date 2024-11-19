@@ -5,11 +5,14 @@ import com.stock.exceptions.TMNotFoundException;
 import com.stock.model.CategoryDTO;
 import com.stock.model.ProductDTO;
 import com.stock.models.Product;
+import com.stock.pages.CategoryPage;
 import com.stock.pages.ProductPage;
 import com.stock.repository.IProductRepository;
+import com.stock.utils.CsvUtil;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -110,6 +113,12 @@ public class ProductServiceImpl implements IProductService {
                 .toList();
         log.info("list of  Products {} with name {}", listProductsByName, name);
         return listProductsByName;
+    }
+
+    @Override
+    public Resource export(String name, Pageable pageable){
+        ProductPage productPage = searchForProductsByAnyColumn(name, pageable);
+        return CsvUtil.export(productPage.getProducts());
     }
 }
 

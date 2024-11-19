@@ -502,7 +502,65 @@ paths:
           description: Invalid input or parameters
         '500':
           description: Internal server error
+  /product/export-csv-file:
+    get:
+      summary: Export products as a CSV file
+      description: Downloads a CSV file containing the list of products.
+      operationId: exportProductsAsCSVFile
+      parameters:
+        - in: query
+          name: input
+          schema:
+            type: string
+          required: true
+          description: The input to filter products by their name.
 
+        - in: query
+          name: sort
+          schema:
+            type: string
+          required: true
+          description: The field to sort by. Defaults to "id" if set to "undefined".
+
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ asc, desc ]
+          required: true
+          description: The sorting order (ascending or descending). Defaults to "asc" if blank or invalid.
+
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: true
+          description: The page number to retrieve (1-based index).
+
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: The number of items per page.
+      responses:
+        '200':
+          description: CSV file successfully generated
+          headers:
+            Content-Type:
+              description: The MIME type of the response
+              schema:
+                type: string
+                example: text/csv
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '500':
+          description: Internal server error while generating the CSV file
   /sale/all:
     get:
       tags:
@@ -742,7 +800,65 @@ paths:
               schema:
                 type: string
                 format: binary
+  /sale/export-csv-file:
+    get:
+      summary: Export sales as a CSV file
+      description: Downloads a CSV file containing the list of sales.
+      operationId: exportSalesAsCSVFile
+      parameters:
+        - in: query
+          name: input
+          schema:
+            type: string
+          required: true
+          description: The input to filter sales by their name.
 
+        - in: query
+          name: sort
+          schema:
+            type: string
+          required: true
+          description: The field to sort by. Defaults to "id" if set to "undefined".
+
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ asc, desc ]
+          required: true
+          description: The sorting order (ascending or descending). Defaults to "asc" if blank or invalid.
+
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: true
+          description: The page number to retrieve (1-based index).
+
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: The number of items per page.
+      responses:
+        '200':
+          description: CSV file successfully generated
+          headers:
+            Content-Type:
+              description: The MIME type of the response
+              schema:
+                type: string
+                example: text/csv
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '500':
+          description: Internal server error while generating the CSV file
   /user/login:
     post:
       tags:
