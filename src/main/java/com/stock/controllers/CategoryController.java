@@ -4,7 +4,7 @@ import com.stock.StockManagementConstants;
 import com.stock.api.controller.CategoryApi;
 import com.stock.model.CategoryDTO;
 import com.stock.pages.CategoryPage;
-import com.stock.services.CategoryServiceImpl;
+import com.stock.services.impl.CategoryServiceImpl;
 import com.stock.services.ICategoryService;
 import com.stock.utils.PagingUtil;
 import com.stock.utils.TextUtil;
@@ -12,11 +12,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(StockManagementConstants.API_VERSION)

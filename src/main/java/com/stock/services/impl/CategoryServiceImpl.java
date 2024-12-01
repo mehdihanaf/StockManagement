@@ -1,4 +1,4 @@
-package com.stock.services;
+package com.stock.services.impl;
 
 import com.stock.exceptions.CustomResponseException;
 import com.stock.exceptions.TMNotFoundException;
@@ -6,6 +6,7 @@ import com.stock.model.CategoryDTO;
 import com.stock.models.Category;
 import com.stock.pages.CategoryPage;
 import com.stock.repository.ICategoryRepository;
+import com.stock.services.ICategoryService;
 import com.stock.utils.CsvUtil;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;

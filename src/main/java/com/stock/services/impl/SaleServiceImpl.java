@@ -1,4 +1,4 @@
-package com.stock.services;
+package com.stock.services.impl;
 
 import com.stock.exceptions.CustomResponseException;
 import com.stock.exceptions.TMNotFoundException;
@@ -10,6 +10,7 @@ import com.stock.pages.ProductPage;
 import com.stock.pages.SalePage;
 import com.stock.repository.IProductRepository;
 import com.stock.repository.ISaleRepository;
+import com.stock.services.ISaleService;
 import com.stock.utils.CsvUtil;
 import com.stock.utils.SaleReportGenerator;
 import com.stock.utils.TextUtil;
@@ -29,7 +30,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class SaleServiceImpl implements ISaleService{
+public class SaleServiceImpl implements ISaleService {
 
     private final ISaleRepository saleRepository;
     private final IProductRepository productRepository;

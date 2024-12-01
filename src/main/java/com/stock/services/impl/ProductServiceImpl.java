@@ -1,4 +1,4 @@
-package com.stock.services;
+package com.stock.services.impl;
 
 import com.stock.exceptions.CustomResponseException;
 import com.stock.exceptions.TMNotFoundException;
@@ -8,6 +8,8 @@ import com.stock.models.Product;
 import com.stock.pages.CategoryPage;
 import com.stock.pages.ProductPage;
 import com.stock.repository.IProductRepository;
+import com.stock.services.ICategoryService;
+import com.stock.services.IProductService;
 import com.stock.utils.CsvUtil;
 import com.stock.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;

@@ -859,6 +859,21 @@ paths:
                 format: binary
         '500':
           description: Internal server error while generating the CSV file
+  /dashboard:
+    get:
+      tags:
+        - dashboard
+      operationId: getAllInfo
+      summary: Get all information of dashboard
+      responses:
+        '200':
+          description: Dashboard details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardDTO'
+        '400':
+          description: Sale not found
   /user/login:
     post:
       tags:
@@ -1118,4 +1133,25 @@ components:
           type: integer
           format: int64
           description: The current page index (0-based)
+    DashboardDTO:
+      type: object
+      properties:
+        categoryCount:
+          type: integer
+          format: int64
+          description: Total number of categories available
+        productCount:
+          type: integer
+          format: int64
+          description: Total number of categories available
+        saleCount:
+          type: integer
+          format: int64
+          description: Total number of categories available
+        profits:
+          type: number
+          format: double
+        profitsMarge:
+          type: number
+          format: double
 

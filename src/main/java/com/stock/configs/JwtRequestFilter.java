@@ -1,6 +1,6 @@
 package com.stock.configs;
 
-import com.stock.services.JwtUserDetailsService;
+import com.stock.services.impl.JwtUserDetailsService;
 import com.stock.utils.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

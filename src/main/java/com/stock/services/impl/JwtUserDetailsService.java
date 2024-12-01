@@ -1,4 +1,4 @@
-package com.stock.services;
+package com.stock.services.impl;
 
 import com.stock.security.UserPrincipal;
 import com.stock.services.impl.UserServiceImpl;
