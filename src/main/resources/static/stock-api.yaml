@@ -974,4 +974,7 @@ components:
         profits:
           type: number
           format: double
+        profitsMarge:
+          type: number
+          format: double
 
