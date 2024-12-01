@@ -47,8 +47,8 @@ public class DashboardServiceImpl implements IDashboardService {
         Long countCategories = categoryRepository.count();
         Long countProducts = productRepository.count();
         Long countSales = saleRepository.count();
-        Double profitsCurrentMonth = DashboardUtils.calculateMonthlyProfit( sales, currentMonth);
-        Double profitsLastMonth = DashboardUtils.calculateMonthlyProfit( sales, lastMonth );
+        Double profitsCurrentMonth = dashboardUtils.calculateMonthlyProfit(sales, currentMonth);
+        Double profitsLastMonth = dashboardUtils.calculateMonthlyProfit(sales, lastMonth);
         Double margeProfits = ((profitsCurrentMonth - profitsLastMonth)/profitsLastMonth)*100;
 
         dashboardDTO.setCategoryCount(countCategories);

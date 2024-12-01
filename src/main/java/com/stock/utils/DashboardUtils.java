@@ -13,7 +13,7 @@ import java.util.Optional;
 public class DashboardUtils {
 
 
-    public static Double   calculateMonthlyProfit(List<Sale> sales, Month month) {
+    public Double   calculateMonthlyProfit(List<Sale> sales, Month month) {
 
         return sales.stream()
                 .filter(sale -> sale.getSaleDate().getMonth() == month)
